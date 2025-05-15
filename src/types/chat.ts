@@ -19,12 +19,11 @@ export interface ProductRecommendationData {
   products: Array<{
     name: string;
     rationale: string;
-    // Potentially add imageUrl or id here if you want to display more product details
-    // imageUrl?: string; 
-    // id?: string; 
+    imageUrl?: string; 
   }>;
   overallReasoning: string;
 }
 export interface StyleSuggestionData extends GenerateStyleSuggestionsOutput {}
 
 export type AiFeature = 'product_recommendations' | 'style_suggestions';
+

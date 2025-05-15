@@ -1,7 +1,6 @@
 
 import type { ProductRecommendationData } from '@/types/chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { ShoppingBag } from 'lucide-react';
 
@@ -23,18 +22,20 @@ export function ProductRecommendationCard({ data }: ProductRecommendationCardPro
         {data.products && data.products.length > 0 ? (
           data.products.map((product, index) => (
             <div key={index} className="p-3 border rounded-md bg-secondary/30 shadow-sm">
-              <div className="flex items-center space-x-3 mb-2">
+              <div className="flex items-start space-x-3 mb-2">
                 <Image 
-                  src={`https://placehold.co/80x80.png?text=${encodeURIComponent(product.name.substring(0,3))}`} 
+                  src={product.imageUrl || `https://placehold.co/80x80.png?text=${encodeURIComponent(product.name.substring(0,3))}`} 
                   alt={product.name} 
-                  width={60} 
-                  height={60} 
-                  className="rounded-md border"
-                  data-ai-hint="fashion clothing" // Generic hint, can be improved if product category is available
+                  width={80} 
+                  height={80} 
+                  className="rounded-md border object-cover"
+                  data-ai-hint={product.category ? product.category.toLowerCase() : "fashion clothing"}
                 />
-                <h4 className="font-semibold text-card-foreground">{product.name}</h4>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-card-foreground">{product.name}</h4>
+                  <p className="text-xs text-muted-foreground italic mt-1">{product.rationale}</p>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground italic">{product.rationale}</p>
             </div>
           ))
         ) : (
@@ -44,3 +45,4 @@ export function ProductRecommendationCard({ data }: ProductRecommendationCardPro
     </Card>
   );
 }
+
