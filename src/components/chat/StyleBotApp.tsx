@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import type { Message, AiFeature } from '@/types/chat';
 import type { GenerateProductRecommendationsInput, GenerateProductRecommendationsOutput } from '@/ai/flows/generate-product-recommendations';
 import type { GenerateStyleSuggestionsInput, GenerateStyleSuggestionsOutput } from '@/ai/flows/generate-style-suggestions';
+import type { GenerateChatResponseInput, GenerateChatResponseOutput } from '@/ai/flows/generate-chat-response'; // Added
 import { ChatHeader } from './ChatHeader';
 import { MessageList } from './MessageList';
 import { ChatControls } from './ChatControls';
@@ -12,7 +13,7 @@ import { faqs, contactInfo } from '@/lib/faq';
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ProductRecForm, StyleGuideForm } from './AiFeatureForms';
-import { getProductRecommendationsAction, getStyleSuggestionsAction, type ActionError } from '@/app/chat/actions';
+import { getProductRecommendationsAction, getStyleSuggestionsAction, getChatResponseAction, type ActionError } from '@/app/chat/actions'; // Added getChatResponseAction
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '../ui/button';
 
@@ -37,7 +38,6 @@ export default function StyleBotApp() {
     return newMessage.id;
   }, []);
   
-  // Update message content, typically for loading states
   const updateMessage = useCallback((messageId: string, updates: Partial<Message>) => {
     setMessages(prevMessages => 
       prevMessages.map(msg => msg.id === messageId ? { ...msg, ...updates } : msg)
@@ -60,7 +60,7 @@ export default function StyleBotApp() {
   };
 
   const handleSendMessage = async (text: string) => {
-    addMessage('user', text);
+    const userMessageId = addMessage('user', text);
     setIsLoading(true);
 
     const lowerText = text.toLowerCase();
@@ -68,15 +68,41 @@ export default function StyleBotApp() {
 
     if (faqAnswer) {
       setTimeout(() => addMessage('bot', faqAnswer), 500);
+      setIsLoading(false);
     } else if (lowerText.includes('product recommendation') || lowerText.includes('recommend product') || lowerText.includes('find clothes') || lowerText.includes('buy clothes') || lowerText.includes('suggest item')) {
       handleTriggerFeature('product_recommendations');
+      setIsLoading(false);
     } else if (lowerText.includes('style advice') || lowerText.includes('color suggestion') || lowerText.includes('fashion tip') || lowerText.includes('style help')) {
       handleTriggerFeature('style_suggestions');
+      setIsLoading(false);
     } else {
-      // More helpful default response for non-FAQ/non-command messages
-      setTimeout(() => addMessage('bot', `Thanks for reaching out! I can help with product recommendations, style advice, and answer FAQs. How can I assist you today? You can also use the buttons below for specific features.`), 1000);
+      // General conversational AI response
+      const loadingMsgId = addMessage('bot', undefined, 'text', undefined, true);
+      try {
+        // Prepare chat history for context, taking last N messages
+        const chatHistoryForContext = messages
+          .slice(-5) // Take last 5 messages for context (including the latest user message)
+          .map(m => ({ sender: m.sender, text: m.text || (m.type !== 'text' ? `[${m.type.replace('_', ' ')} displayed]` : '') }));
+
+
+        const result = await getChatResponseAction({ userInput: text, chatHistory: chatHistoryForContext });
+        if ((result as ActionError).error) {
+          const errorResult = result as ActionError;
+          console.error(errorResult.error.message);
+          updateMessage(loadingMsgId, { text: `Sorry, I had a little trouble with that. ${errorResult.error.message}`, isLoading: false, type: 'text' });
+          toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
+        } else {
+          const chatResponse = result as GenerateChatResponseOutput;
+          updateMessage(loadingMsgId, { text: chatResponse.aiResponse, isLoading: false });
+        }
+      } catch (error: any) {
+        console.error("Client-side error calling getChatResponseAction:", error);
+        const errorMessage = error.message || "An unexpected error occurred.";
+        updateMessage(loadingMsgId, { text: `Sorry, I couldn't process that right now. ${errorMessage}`, isLoading: false, type: 'text' });
+        toast({ title: "Error", description: errorMessage, variant: "destructive" });
+      }
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleTriggerFeature = (feature: 'product_recommendations' | 'style_suggestions' | 'faq_list' | 'contact_info' | 'escalate') => {
@@ -100,7 +126,7 @@ export default function StyleBotApp() {
 
   const handleProductRecSubmit = async (data: GenerateProductRecommendationsInput) => {
     setShowAiForm(null);
-    addMessage('user', "Okay, here are my preferences for product recommendations."); // More contextual user message
+    addMessage('user', "Okay, here are my preferences for product recommendations."); 
     const loadingMsgId = addMessage('ai', undefined, 'product_recommendations', undefined, true);
     setIsLoading(true);
     try {
@@ -124,7 +150,7 @@ export default function StyleBotApp() {
 
   const handleStyleGuideSubmit = async (data: GenerateStyleSuggestionsInput) => {
     setShowAiForm(null);
-    addMessage('user', "Great, here's my info for style advice."); // More contextual user message
+    addMessage('user', "Great, here's my info for style advice."); 
     const loadingMsgId = addMessage('ai', undefined, 'style_suggestions', undefined, true);
     setIsLoading(true);
     try {
@@ -192,4 +218,3 @@ export default function StyleBotApp() {
     </div>
   );
 }
-
