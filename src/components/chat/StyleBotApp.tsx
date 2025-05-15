@@ -67,9 +67,8 @@ export default function StyleBotApp() {
     if (faqAnswer) {
       setTimeout(() => addMessage('bot', faqAnswer), 500);
     } else {
-      // Simple echo bot for non-FAQ/non-command messages for now
-      // In a real app, this could go to a general conversational AI
-      setTimeout(() => addMessage('bot', `I've received your message: "${text}". For specific features like recommendations or style advice, please use the buttons below.`), 1000);
+      // More helpful default response for non-FAQ/non-command messages
+      setTimeout(() => addMessage('bot', `Thanks for reaching out! I can help with product recommendations, style advice, and answer FAQs. How can I assist you today? You can also use the buttons below for specific features.`), 1000);
     }
     setIsLoading(false);
   };
