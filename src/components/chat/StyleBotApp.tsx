@@ -63,9 +63,15 @@ export default function StyleBotApp() {
     addMessage('user', text);
     setIsLoading(true);
 
-    const faqAnswer = handleFaqSearch(text);
+    const lowerText = text.toLowerCase();
+    const faqAnswer = handleFaqSearch(lowerText);
+
     if (faqAnswer) {
       setTimeout(() => addMessage('bot', faqAnswer), 500);
+    } else if (lowerText.includes('product recommendation') || lowerText.includes('recommend product') || lowerText.includes('find clothes') || lowerText.includes('buy clothes') || lowerText.includes('suggest item')) {
+      handleTriggerFeature('product_recommendations');
+    } else if (lowerText.includes('style advice') || lowerText.includes('color suggestion') || lowerText.includes('fashion tip') || lowerText.includes('style help')) {
+      handleTriggerFeature('style_suggestions');
     } else {
       // More helpful default response for non-FAQ/non-command messages
       setTimeout(() => addMessage('bot', `Thanks for reaching out! I can help with product recommendations, style advice, and answer FAQs. How can I assist you today? You can also use the buttons below for specific features.`), 1000);
@@ -94,7 +100,7 @@ export default function StyleBotApp() {
 
   const handleProductRecSubmit = async (data: GenerateProductRecommendationsInput) => {
     setShowAiForm(null);
-    addMessage('user', "I'm looking for product recommendations.");
+    addMessage('user', "Okay, here are my preferences for product recommendations."); // More contextual user message
     const loadingMsgId = addMessage('ai', undefined, 'product_recommendations', undefined, true);
     setIsLoading(true);
     try {
@@ -102,12 +108,12 @@ export default function StyleBotApp() {
       if ((result as ActionError).error) {
         const errorResult = result as ActionError;
         console.error(errorResult.error.message);
-        updateMessage(loadingMsgId, { text: errorResult.error.message, isLoading: false, type: 'text' });
+        updateMessage(loadingMsgId, { text: `Sorry, I couldn't get product recommendations. ${errorResult.error.message}`, isLoading: false, type: 'text' });
         toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
       } else {
         updateMessage(loadingMsgId, { data: result as GenerateProductRecommendationsOutput, isLoading: false });
       }
-    } catch (error: any) { // Catches network errors or other unexpected client-side issues
+    } catch (error: any) { 
       console.error("Client-side error calling getProductRecommendationsAction:", error);
       const errorMessage = error.message || "An unexpected error occurred while fetching recommendations.";
       updateMessage(loadingMsgId, { text: `Sorry, I couldn't get product recommendations right now. ${errorMessage}`, isLoading: false, type: 'text' });
@@ -118,7 +124,7 @@ export default function StyleBotApp() {
 
   const handleStyleGuideSubmit = async (data: GenerateStyleSuggestionsInput) => {
     setShowAiForm(null);
-    addMessage('user', "I'd like some style advice.");
+    addMessage('user', "Great, here's my info for style advice."); // More contextual user message
     const loadingMsgId = addMessage('ai', undefined, 'style_suggestions', undefined, true);
     setIsLoading(true);
     try {
@@ -126,12 +132,12 @@ export default function StyleBotApp() {
       if ((result as ActionError).error) {
         const errorResult = result as ActionError;
         console.error(errorResult.error.message);
-        updateMessage(loadingMsgId, { text: errorResult.error.message, isLoading: false, type: 'text' });
+        updateMessage(loadingMsgId, { text: `Sorry, I couldn't get style suggestions. ${errorResult.error.message}`, isLoading: false, type: 'text' });
         toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
       } else {
         updateMessage(loadingMsgId, { data: result as GenerateStyleSuggestionsOutput, isLoading: false });
       }
-    } catch (error: any) { // Catches network errors or other unexpected client-side issues
+    } catch (error: any) { 
       console.error("Client-side error calling getStyleSuggestionsAction:", error);
       const errorMessage = error.message || "An unexpected error occurred while fetching style suggestions.";
       updateMessage(loadingMsgId, { text: `Sorry, I couldn't get style suggestions right now. ${errorMessage}`, isLoading: false, type: 'text' });
@@ -186,3 +192,4 @@ export default function StyleBotApp() {
     </div>
   );
 }
+
