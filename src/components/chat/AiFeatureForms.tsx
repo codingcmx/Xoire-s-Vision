@@ -21,8 +21,7 @@ import type { GenerateStyleSuggestionsInput } from "@/ai/flows/generate-style-su
 
 // Schema for Product Recommendations
 const productRecSchema = z.object({
-  userPreferences: z.string().min(10, "Please describe your preferences in more detail."),
-  // pastBehavior: z.string().min(10, "Please describe your past behavior (purchases, browsing) in more detail."), // Removed
+  userPreferences: z.string().min(3, "Please describe your preferences in a bit more detail, or provide a general style like 'bohemian' or 'classic'.").max(500, "Please keep your preferences under 500 characters."),
 });
 
 interface ProductRecFormProps {
@@ -35,7 +34,6 @@ export function ProductRecForm({ onSubmit, isSubmitting }: ProductRecFormProps) 
     resolver: zodResolver(productRecSchema),
     defaultValues: {
       userPreferences: "",
-      // pastBehavior: "", // Removed
     },
   });
 
@@ -49,28 +47,13 @@ export function ProductRecForm({ onSubmit, isSubmitting }: ProductRecFormProps) 
             <FormItem>
               <FormLabel>Your Style Preferences</FormLabel>
               <FormControl>
-                <Textarea placeholder="e.g., I like minimalist designs, comfortable fit, neutral colors..." {...field} />
+                <Textarea placeholder="e.g., I like minimalist designs, comfortable fit, neutral colors, or just 'bohemian'..." {...field} />
               </FormControl>
-              <FormDescription>Describe what you typically look for in clothing and accessories.</FormDescription>
+              <FormDescription>Describe what you typically look for in clothing and accessories. Even a single style word helps!</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* Removed Past Behavior Field
-        <FormField
-          control={form.control}
-          name="pastBehavior"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your Past Purchases/Browsing</FormLabel>
-              <FormControl>
-                <Textarea placeholder="e.g., I recently bought a black cotton t-shirt and browsed for denim jackets." {...field} />
-              </FormControl>
-              <FormDescription>Mention any recent items you've bought, liked, or searched for.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         <Button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary/90">
           {isSubmitting ? "Getting Recommendations..." : "Get Product Recommendations"}
         </Button>
@@ -81,9 +64,9 @@ export function ProductRecForm({ onSubmit, isSubmitting }: ProductRecFormProps) 
 
 // Schema for Style Suggestions
 const styleGuideSchema = z.object({
-  skinTone: z.string().min(2, "Please describe your skin tone."),
-  preferences: z.string().min(10, "Please describe your style preferences in more detail."),
-  currentTrends: z.string().optional(),
+  skinTone: z.string().min(2, "Please describe your skin tone.").max(50, "Please keep skin tone description brief."),
+  preferences: z.string().min(3, "Please describe your style preferences in a bit more detail, or provide a general style.").max(500, "Please keep your preferences under 500 characters."),
+  currentTrends: z.string().max(200, "Please keep current trends brief.").optional(),
 });
 
 interface StyleGuideFormProps {
@@ -126,7 +109,7 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
               <FormControl>
                 <Textarea placeholder="e.g., Modern, classic, bohemian, casual, formal..." {...field} />
               </FormControl>
-              <FormDescription>What kind of look are you going for?</FormDescription>
+              <FormDescription>What kind of look are you going for? Even a single style word helps!</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -152,4 +135,3 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
     </Form>
   );
 }
-
