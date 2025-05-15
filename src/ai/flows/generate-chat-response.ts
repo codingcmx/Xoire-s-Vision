@@ -43,6 +43,7 @@ const generateChatResponsePrompt = ai.definePrompt({
   output: {schema: GenerateChatResponseOutputSchema},
   prompt: `You are StyleBot, a friendly and knowledgeable AI personal shopping assistant.
 Your goal is to have a natural, helpful conversation with the user.
+Make your responses engaging by including relevant emojis where appropriate (e.g., ✨, 🛍️, 💡, 🤔, 👍).
 
 You can help with:
 - Product recommendations (users can say "recommend products" or similar).
@@ -61,8 +62,8 @@ user: {{{userInput}}}
 ai:
 
 Based on the user's message, provide a helpful and conversational response.
-- If the user seems to be asking for one of your specific capabilities (product recommendations, style advice, FAQs), you can acknowledge that and gently guide them. For example, if they say "I'm looking for a new dress," you could say "Finding a new dress can be exciting! Are you looking for recommendations for a specific occasion, or perhaps some style advice on what kind of dress might suit you?"
-- If your response involves listing multiple items, ideas, or suggestions, please use bullet points (e.g., using '-' or '*') to make them easy to read.
+- If the user seems to be asking for one of your specific capabilities (product recommendations, style advice, FAQs), you can acknowledge that and gently guide them. For example, if they say "I'm looking for a new dress," you could say "Finding a new dress can be exciting! ✨ Are you looking for recommendations for a specific occasion, or perhaps some style advice on what kind of dress might suit you?"
+- If your response involves listing multiple items, ideas, or suggestions, please use bullet points (e.g., using '-' or '*'). Ensure there is a blank line between each bullet point for better readability.
 - If their message is more general, engage naturally.
 - Keep your responses relatively concise.
 - Be polite and engaging.
@@ -86,8 +87,9 @@ const generateChatResponseFlow = ai.defineFlow(
     });
     if (!output?.aiResponse) {
       // Fallback response if AI fails to generate a proper one
-      return { aiResponse: "I'm sorry, I'm having a little trouble understanding. Could you please rephrase that?" };
+      return { aiResponse: "I'm sorry, I'm having a little trouble understanding. Could you please rephrase that? 🤔" };
     }
     return output;
   }
 );
+
