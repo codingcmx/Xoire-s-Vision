@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +22,7 @@ import type { GenerateStyleSuggestionsInput } from "@/ai/flows/generate-style-su
 // Schema for Product Recommendations
 const productRecSchema = z.object({
   userPreferences: z.string().min(10, "Please describe your preferences in more detail."),
-  pastBehavior: z.string().min(10, "Please describe your past behavior (purchases, browsing) in more detail."),
+  // pastBehavior: z.string().min(10, "Please describe your past behavior (purchases, browsing) in more detail."), // Removed
 });
 
 interface ProductRecFormProps {
@@ -34,7 +35,7 @@ export function ProductRecForm({ onSubmit, isSubmitting }: ProductRecFormProps) 
     resolver: zodResolver(productRecSchema),
     defaultValues: {
       userPreferences: "",
-      pastBehavior: "",
+      // pastBehavior: "", // Removed
     },
   });
 
@@ -55,6 +56,7 @@ export function ProductRecForm({ onSubmit, isSubmitting }: ProductRecFormProps) 
             </FormItem>
           )}
         />
+        {/* Removed Past Behavior Field
         <FormField
           control={form.control}
           name="pastBehavior"
@@ -68,7 +70,7 @@ export function ProductRecForm({ onSubmit, isSubmitting }: ProductRecFormProps) 
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <Button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary/90">
           {isSubmitting ? "Getting Recommendations..." : "Get Product Recommendations"}
         </Button>
@@ -150,3 +152,4 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
     </Form>
   );
 }
+

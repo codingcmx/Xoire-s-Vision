@@ -2,7 +2,7 @@
 'use server';
 
 /**
- * @fileOverview Recommends products based on user preferences and past behavior,
+ * @fileOverview Recommends products based on user preferences,
  * by first fetching relevant products from the catalog using a tool.
  *
  * - generateProductRecommendations - A function that handles the product recommendation process.
@@ -19,11 +19,6 @@ const GenerateProductRecommendationsInputSchema = z.object({
   userPreferences: z
     .string()
     .describe('The stated preferences of the user regarding style, fit, colors, and types of items.'),
-  pastBehavior: z
-    .string()
-    .describe(
-      'A description of the user\'s past behavior, including previous purchases, items browsed, or brands liked.'
-    ),
 });
 export type GenerateProductRecommendationsInput = z.infer<
   typeof GenerateProductRecommendationsInputSchema
@@ -50,7 +45,7 @@ const GenerateProductRecommendationsOutputSchema = z.object({
   overallReasoning: z
     .string()
     .describe(
-      'A general explanation of why these products were chosen, summarizing how they align with the user\'s preferences and past behavior after considering the catalog. If this reasoning involves multiple points or aspects, present it as a bulleted list for clarity.'
+      'A general explanation of why these products were chosen, summarizing how they align with the user\'s preferences after considering the catalog. If this reasoning involves multiple points or aspects, present it as a bulleted list for clarity.'
     ),
 });
 export type GenerateProductRecommendationsOutput = z.infer<
@@ -84,16 +79,13 @@ const prompt = ai.definePrompt({
   input: {schema: GenerateProductRecommendationsInputSchema},
   output: {schema: GenerateProductRecommendationsOutputSchema},
   tools: [getProductCatalogTool],
-  prompt: `You are a personal shopping assistant. Your goal is to recommend products from our store's catalog that best match the user's preferences and past behavior.
+  prompt: `You are a personal shopping assistant. Your goal is to recommend products from our store's catalog that best match the user's preferences.
 
 User's Stated Preferences:
 {{{userPreferences}}}
 
-User's Past Behavior:
-{{{pastBehavior}}}
-
 Instructions:
-1.  Analyze the user's preferences and past behavior to understand what they are looking for.
+1.  Analyze the user's preferences to understand what they are looking for.
 2.  Formulate a search query based on this understanding.
 3.  Use the 'getProductCatalogTool' with your search query to fetch relevant products from our catalog. This tool will provide product details including name, description, and image URL if available.
 4.  Review the products returned by the tool.
