@@ -1,3 +1,4 @@
+
 import type { GenerateProductRecommendationsOutput } from '@/ai/flows/generate-product-recommendations';
 import type { GenerateStyleSuggestionsOutput } from '@/ai/flows/generate-style-suggestions';
 
@@ -13,7 +14,17 @@ export interface Message {
   isLoading?: boolean;
 }
 
-export interface ProductRecommendationData extends GenerateProductRecommendationsOutput {}
+// Updated to reflect the new structure from generate-product-recommendations.ts
+export interface ProductRecommendationData {
+  products: Array<{
+    name: string;
+    rationale: string;
+    // Potentially add imageUrl or id here if you want to display more product details
+    // imageUrl?: string; 
+    // id?: string; 
+  }>;
+  overallReasoning: string;
+}
 export interface StyleSuggestionData extends GenerateStyleSuggestionsOutput {}
 
 export type AiFeature = 'product_recommendations' | 'style_suggestions';
