@@ -1,3 +1,4 @@
+
 // Use server directive.
 'use server';
 
@@ -23,7 +24,7 @@ export type GenerateStyleSuggestionsInput = z.infer<typeof GenerateStyleSuggesti
 
 // Define the output schema
 const GenerateStyleSuggestionsOutputSchema = z.object({
-  suggestions: z.array(z.string()).describe('An array of personalized style suggestions.'),
+  suggestions: z.array(z.string()).describe('An array of personalized style suggestions, potentially including relevant emojis.'),
 });
 
 export type GenerateStyleSuggestionsOutput = z.infer<typeof GenerateStyleSuggestionsOutputSchema>;
@@ -41,6 +42,7 @@ const generateStyleSuggestionsPrompt = ai.definePrompt({
   input: {schema: GenerateStyleSuggestionsInputSchema},
   output: {schema: GenerateStyleSuggestionsOutputSchema},
   prompt: `You are a personal stylist. Based on the user's skin tone, style preferences, and current trends, provide personalized style suggestions.
+Make your suggestions engaging by including relevant emojis where appropriate (e.g., ✨, 🎨, 👍, 👗, 👖, 👠, 💄).
 
 Skin Tone: {{{skinTone}}}
 Preferences: {{{preferences}}}
@@ -61,3 +63,4 @@ const generateStyleSuggestionsFlow = ai.defineFlow(
     return output!;
   }
 );
+
