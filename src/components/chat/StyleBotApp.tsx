@@ -60,7 +60,7 @@ export default function StyleBotApp() {
   };
 
   const handleSendMessage = async (text: string) => {
-    const userMessageId = addMessage('user', text);
+    addMessage('user', text); // Add user message immediately
     setIsLoading(true);
 
     const lowerText = text.toLowerCase();
@@ -68,9 +68,6 @@ export default function StyleBotApp() {
 
     if (faqAnswer) {
       setTimeout(() => addMessage('bot', faqAnswer), 500);
-      setIsLoading(false);
-    } else if (lowerText.includes('product recommendation') || lowerText.includes('recommend product') || lowerText.includes('find clothes') || lowerText.includes('buy clothes') || lowerText.includes('suggest item')) {
-      handleTriggerFeature('product_recommendations');
       setIsLoading(false);
     } else if (lowerText.includes('style advice') || lowerText.includes('color suggestion') || lowerText.includes('fashion tip') || lowerText.includes('style help')) {
       handleTriggerFeature('style_suggestions');
@@ -81,8 +78,12 @@ export default function StyleBotApp() {
       try {
         // Prepare chat history for context, taking last N messages
         const chatHistoryForContext = messages
-          .slice(-5) // Take last 5 messages for context (including the latest user message)
+          .slice(-5) // Take last 5 messages for context
           .map(m => ({ sender: m.sender, text: m.text || (m.type !== 'text' ? `[${m.type.replace('_', ' ')} displayed]` : '') }));
+        
+        // Add current user message to history for context if not already added (it is, by addMessage above)
+        // const currentMessageForContext = { sender: 'user' as MessageSender, text: text };
+        // const combinedHistory = [...chatHistoryForContext, currentMessageForContext];
 
 
         const result = await getChatResponseAction({ userInput: text, chatHistory: chatHistoryForContext });
