@@ -50,7 +50,7 @@ export function ChatControls({ onSendMessage, isSending, onTriggerFeature }: Cha
                   size="icon"
                   onClick={() => onTriggerFeature(feature)}
                   aria-label={label}
-                  className="text-muted-foreground hover:text-primary-foreground hover:border-primary"
+                  className="text-muted-foreground hover:text-primary-foreground hover:bg-primary hover:border-primary"
                 >
                   <Icon className="h-5 w-5" />
                 </Button>
@@ -74,6 +74,11 @@ export function ChatControls({ onSendMessage, isSending, onTriggerFeature }: Cha
           <Button onClick={handleSend} disabled={isSending || !inputValue.trim()} aria-label="Send message">
             <SendHorizonal className="h-5 w-5" />
           </Button>
+        </div>
+        <div className="text-center mt-2">
+          <p className="text-xs text-muted-foreground/80">
+            Powered by Xoire
+          </p>
         </div>
       </div>
     </TooltipProvider>
