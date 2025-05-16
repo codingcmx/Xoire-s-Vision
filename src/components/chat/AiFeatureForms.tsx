@@ -189,7 +189,7 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={isSubmitting} className="w-full bg-accent hover:bg-accent/90">
+        <Button type="submit" disabled={isSubmitting} className="w-full bg-primary hover:bg-primary/90">
           {isSubmitting ? "Getting Suggestions..." : "Get Style Suggestions"}
         </Button>
       </form>
