@@ -17,88 +17,88 @@ h1, h2, h3, h4, h5, h6,
 
 @layer base {
   :root {
-    /* Xoire Luxury Theme - Old Money Inspired - Light Mode */
-    --background: 30 50% 98%; /* Soft, warm cream/eggshell */
-    --foreground: 20 15% 25%; /* Deep, warm charcoal for text */
+    /* Xoire Luxury Theme - Hopeful Luxury - Light Mode */
+    --background: 0 0% 100%;           /* Crisp white */
+    --foreground: 220 20% 20%;         /* Dark, cool grey/blue text */
 
-    --muted: 30 30% 94%; /* Lighter warm grey for muted elements */
-    --muted-foreground: 20 15% 45%; /* Medium warm grey for muted text */
+    --muted: 220 20% 90%;              /* Lighter cool grey for muted elements */
+    --muted-foreground: 220 20% 45%;   /* Medium cool grey for muted text */
 
-    --popover: 30 50% 99%; /* Clean, very light cream for popovers */
-    --popover-foreground: 20 15% 25%;
+    --popover: 0 0% 97%;
+    --popover-foreground: 220 20% 20%;
 
-    --card: 30 50% 99%; /* Clean, very light cream for cards */
-    --card-foreground: 20 15% 25%;
+    --card: 0 0% 98%;                  /* Very light grey for cards */
+    --card-foreground: 220 20% 20%;
 
-    --border: 30 20% 88%; /* Soft, warm grey border */
-    --input: 30 30% 96%; /* Light cream for input fields */
+    --border: 220 15% 88%;             /* Light, cool border */
+    --input: 220 15% 95%;              /* Light input background */
 
-    --primary: 215 35% 38%; /* Muted, deep classic navy */
-    --primary-foreground: 30 50% 98%; /* Soft cream for text on primary */
+    --primary: 40 70% 50%;             /* Rich Gold, slightly more subdued for light mode */
+    --primary-foreground: 0 0% 100%;   /* White text on gold */
 
-    --secondary: 30 25% 92%; /* Very light, subtle warm grey for subtle contrasts */
-    --secondary-foreground: 20 15% 30%; /* Dark foreground for text on secondary */
+    --secondary: 220 20% 94%;          /* Light cool grey for secondary elements */
+    --secondary-foreground: 220 20% 30%;
 
-    --accent: 40 65% 68%;   /* Muted, brushed gold/ochre */
-    --accent-foreground: 20 15% 25%; /* Dark text on accent */
+    --accent: 180 50% 45%;             /* Teal, more grounded for light mode accent */
+    --accent-foreground: 0 0% 100%;    /* White text on accent */
 
-    --destructive: 0 55% 55%; /* A classic, slightly muted red for destructive actions */
-    --destructive-foreground: 30 50% 98%;
+    --destructive: 0 70% 60%;          /* Classic red */
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 215 35% 50%; /* Ring color based on primary (Classic Navy) */
-    --radius: 0.375rem; /* Slightly less rounded for a crisper feel */
+    --ring: 40 70% 55%;                /* Ring color based on primary (Gold) */
+    --radius: 0.375rem;                /* Slightly less rounded for a crisper feel */
 
     /* Sidebar colors - Light Mode */
-    --sidebar-background: 30 40% 96%; 
-    --sidebar-foreground: 20 15% 30%;
-    --sidebar-primary: 215 35% 38%; 
-    --sidebar-primary-foreground: 30 50% 98%;
-    --sidebar-accent: 30 30% 92%;
-    --sidebar-accent-foreground: 20 15% 25%;
-    --sidebar-border: 30 20% 85%;
-    --sidebar-ring: 215 35% 50%;
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 220 20% 25%;
+    --sidebar-primary: 40 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 90%;      /* Subtle hover/active for sidebar items */
+    --sidebar-accent-foreground: 40 70% 50%; /* Gold text on hover */
+    --sidebar-border: 220 15% 85%;
+    --sidebar-ring: 40 70% 55%;
   }
 
   .dark {
-    /* Xoire Luxury Theme - Old Money Inspired - Dark Mode */
-    --background: 210 15% 12%; /* Very dark, desaturated navy/charcoal */
-    --foreground: 30 30% 90%; /* Soft, off-white/light cream for text */
+    /* Xoire Luxury Theme - Hopeful Luxury - Dark Mode */
+    --background: 220 20% 10%;         /* Very deep, cool, almost black blue */
+    --foreground: 210 30% 92%;         /* Soft, cool off-white */
 
-    --muted: 210 15% 20%; /* Slightly lighter than background */
-    --muted-foreground: 30 30% 70%; /* Lighter grey for muted text */
+    --muted: 220 15% 22%;              /* Slightly lighter than background for muted elements */
+    --muted-foreground: 210 30% 70%;   /* Lighter grey for muted text */
 
-    --popover: 210 15% 10%; /* Dark popover background */
-    --popover-foreground: 30 30% 90%;
+    --popover: 220 20% 8%;             /* Even darker for popovers */
+    --popover-foreground: 210 30% 92%;
 
-    --card: 210 15% 10%; /* Dark card background */
-    --card-foreground: 30 30% 90%;
+    --card: 220 20% 12%;               /* Slightly lighter than bg for subtle layering */
+    --card-foreground: 210 30% 92%;
 
-    --border: 210 10% 28%; /* Subtle border for dark elements */
-    --input: 210 10% 17%; /* Dark input background */
+    --border: 220 15% 25%;             /* Subtle border */
+    --input: 220 15% 18%;              /* Dark input background */
 
-    --primary: 215 40% 58%; /* Classic navy, slightly brighter for dark mode */
-    --primary-foreground: 30 30% 95%; /* Soft cream for text on primary */
+    --primary: 45 90% 60%;             /* Luminous, hopeful Gold */
+    --primary-foreground: 220 20% 10%; /* Dark text on the bright gold */
 
-    --secondary: 210 15% 22%; /* A slightly lighter dark shade for subtle contrast */
-    --secondary-foreground: 30 30% 90%; /* Soft off-white for text on secondary */
+    --secondary: 220 15% 20%;          /* For secondary elements, darker */
+    --secondary-foreground: 210 30% 85%;
 
-    --accent: 40 50% 60%; /* Muted gold/ochre for dark mode */
-    --accent-foreground: 210 15% 15%; /* Dark text on accent */
+    --accent: 180 60% 55%;             /* Hopeful Teal/Cyan */
+    --accent-foreground: 220 20% 10%;  /* Dark text on accent */
     
-    --destructive: 0 50% 60%; /* A deep, slightly muted red for destructive actions */
-    --destructive-foreground: 30 30% 95%;
+    --destructive: 0 60% 55%;          /* A deep red for destructive actions */
+    --destructive-foreground: 0 0% 100%;
 
-    --ring: 215 40% 65%; /* Ring color based on primary (Brighter Classic Navy) */
+    --ring: 45 90% 65%;                /* Ring color based on gold primary */
     
     /* Sidebar colors - Dark Mode */
-    --sidebar-background: 210 15% 8%;
-    --sidebar-foreground: 30 30% 88%;
-    --sidebar-primary: 215 40% 58%; 
-    --sidebar-primary-foreground: 30 30% 95%;
-    --sidebar-accent: 210 15% 18%;
-    --sidebar-accent-foreground: 30 30% 88%;
-    --sidebar-border: 210 10% 22%;
-    --sidebar-ring: 215 40% 65%;
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 210 30% 90%;
+    --sidebar-primary: 45 90% 60%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 20% 15%;      /* Subtle hover/active for sidebar items */
+    --sidebar-accent-foreground: 45 90% 65%; /* Gold text on hover */
+    --sidebar-border: 220 15% 20%;
+    --sidebar-ring: 45 90% 65%;
   }
 }
 
