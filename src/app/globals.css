@@ -23,30 +23,30 @@ body {
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
 
-    --primary: 173 58% 39%; /* Teal-ish color from screenshot */
+    --primary: 180 100% 25%; /* Teal - HSL for #008080 */
     --primary-foreground: 0 0% 98%; /* Light text on primary */
 
     --secondary: 0 0% 94%;
     --secondary-foreground: 0 0% 9%;
 
-    --accent: 0 0% 90%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 285 100% 50%; /* Electric Purple - HSL for #BF00FF */
+    --accent-foreground: 0 0% 98%; /* Light text on accent */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 173 50% 50%;
+    --ring: 180 100% 35%; /* Slightly lighter teal for ring */
     --radius: 0.5rem;
 
     /* Sidebar colors - will also default to a simpler scheme */
     --sidebar-background: 0 0% 96%;
     --sidebar-foreground: 0 0% 10%;
-    --sidebar-primary: 173 58% 39%;
+    --sidebar-primary: 180 100% 25%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 173 58% 39%;
+    --sidebar-accent-foreground: 180 100% 25%;
     --sidebar-border: 0 0% 89.8%;
-    --sidebar-ring: 173 50% 50%;
+    --sidebar-ring: 180 100% 35%;
   }
 
   .dark {
@@ -65,29 +65,29 @@ body {
     --border: 0 0% 19.8%;
     --input: 0 0% 19.8%;
 
-    --primary: 173 50% 50%; /* Lighter Teal for dark mode */
+    --primary: 180 100% 35%; /* Lighter Teal for dark mode */
     --primary-foreground: 0 0% 9%;
 
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --accent: 0 0% 20%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 285 100% 60%; /* Lighter Purple for dark mode */
+    --accent-foreground: 0 0% 9%;
 
     --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 173 45% 60%;
+    --ring: 180 100% 45%;
     
     /* Sidebar colors - Dark Mode */
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 173 50% 50%;
+    --sidebar-primary: 180 100% 35%;
     --sidebar-primary-foreground: 0 0% 9%;
     --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 173 50% 60%;
+    --sidebar-accent-foreground: 180 100% 45%;
     --sidebar-border: 0 0% 19.8%;
-    --sidebar-ring: 173 45% 60%;
+    --sidebar-ring: 180 100% 45%;
   }
 }
 
@@ -116,4 +116,18 @@ body {
 
 .animate-subtle-slide-in-up {
   animation: subtle-slide-in-up 0.3s ease-out;
+}
+
+/* Custom animation for bot icon blinking */
+@keyframes bot-blink-animation {
+  0%, 48%, 52%, 100% { /* Stay opaque for most of the cycle, quick blink */
+    opacity: 1;
+  }
+  50% { /* Blink part */
+    opacity: 0.3;
+  }
+}
+
+.animate-bot-blink {
+  animation: bot-blink-animation 3s infinite ease-in-out; /* Blink every 3 seconds */
 }
