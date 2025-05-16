@@ -18,7 +18,7 @@ h1, h2, h3, h4, h5, h6,
 @layer base {
   :root {
     /* Xoire Luxury Theme - Hopeful Luxury - Light Mode */
-    --background: 0 0% 100%;           /* Crisp white */
+    --background: 0 0% 97%;           /* Very light neutral grey */
     --foreground: 220 20% 20%;         /* Dark, cool grey/blue text */
 
     --muted: 220 20% 90%;              /* Lighter cool grey for muted elements */
