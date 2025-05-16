@@ -170,7 +170,7 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
               <FormControl>
                 <Input placeholder="e.g., Wedding guest, casual brunch, office party" {...field} />
               </FormControl>
-              <FormDescription>What event or situation are you dressing for?</FormDescription>
+              <FormDescription>What event or situation are you dressing for? e.g., "your wear today".</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -196,3 +196,4 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
     </Form>
   );
 }
+
