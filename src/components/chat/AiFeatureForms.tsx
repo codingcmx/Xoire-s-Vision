@@ -70,6 +70,7 @@ const styleGuideSchema = z.object({
   gender: z.enum(['male', 'female', 'other'], {
     required_error: "Please select your gender.",
   }),
+  occasion: z.string().max(100, "Occasion description is too long (max 100 characters).").optional(),
   currentTrends: z.string().max(200, "Current trends description is too long (max 200 characters).").optional(),
 });
 
@@ -84,6 +85,7 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
     defaultValues: {
       skinTone: "",
       preferences: "",
+      occasion: "",
       currentTrends: "",
     },
   });
@@ -155,6 +157,20 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
                 </RadioGroup>
               </FormControl>
               <FormDescription>This helps us tailor style suggestions.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="occasion"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Occasion (Optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., Wedding guest, casual brunch, office party" {...field} />
+              </FormControl>
+              <FormDescription>What event or situation are you dressing for?</FormDescription>
               <FormMessage />
             </FormItem>
           )}
