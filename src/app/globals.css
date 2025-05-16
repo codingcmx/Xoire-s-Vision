@@ -3,93 +3,102 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Targeting heading elements and specific ShadCN title components for serif font */
+h1, h2, h3, h4, h5, h6,
+.card-title, /* Assuming CardTitle component will have this class or we target its element */
+.dialog-title /* Assuming DialogTitle component will have this class or we target its element */
+ {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
 
 @layer base {
   :root {
-    /* Xoire Luxury Theme - Light Mode */
-    --background: 0 0% 98%; /* Clean off-white */
-    --foreground: 240 10% 3.9%; /* Very dark blue, almost black */
+    /* Xoire Luxury Theme - Old Money Inspired - Light Mode */
+    --background: 30 50% 98%; /* Soft, warm cream/eggshell */
+    --foreground: 20 15% 25%; /* Deep, warm charcoal for text */
 
-    --muted: 240 4.8% 95.9%; /* Lighter gray for muted elements */
-    --muted-foreground: 240 3.8% 46.1%; /* Medium gray for muted text */
+    --muted: 30 30% 94%; /* Lighter warm grey for muted elements */
+    --muted-foreground: 20 15% 45%; /* Medium warm grey for muted text */
 
-    --popover: 0 0% 100%; /* Clean white for popovers */
-    --popover-foreground: 240 10% 3.9%;
+    --popover: 30 50% 99%; /* Clean, very light cream for popovers */
+    --popover-foreground: 20 15% 25%;
 
-    --card: 0 0% 100%; /* Clean white for cards */
-    --card-foreground: 240 10% 3.9%;
+    --card: 30 50% 99%; /* Clean, very light cream for cards */
+    --card-foreground: 20 15% 25%;
 
-    --border: 240 5.9% 90%; /* Soft, light gray border */
-    --input: 0 0% 100%; /* White for input fields */
+    --border: 30 20% 88%; /* Soft, warm grey border */
+    --input: 30 30% 96%; /* Light cream for input fields */
 
-    --primary: 270 60% 55%; /* Vibrant Purple (adapted for light mode) */
-    --primary-foreground: 0 0% 98%; /* White for text on primary */
+    --primary: 215 35% 38%; /* Muted, deep classic navy */
+    --primary-foreground: 30 50% 98%; /* Soft cream for text on primary */
 
-    --secondary: 240 4.8% 92.9%; /* Very light gray for subtle contrasts */
-    --secondary-foreground: 240 10% 3.9%; /* Dark foreground for text on secondary */
+    --secondary: 30 25% 92%; /* Very light, subtle warm grey for subtle contrasts */
+    --secondary-foreground: 20 15% 30%; /* Dark foreground for text on secondary */
 
-    --accent: 220 70% 50%;   /* Vibrant Blue (adapted for light mode) */
-    --accent-foreground: 0 0% 98%; /* White for text on accent */
+    --accent: 40 65% 68%;   /* Muted, brushed gold/ochre */
+    --accent-foreground: 20 15% 25%; /* Dark text on accent */
 
-    --destructive: 0 70% 50%; /* A clear red for destructive actions */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 55% 55%; /* A classic, slightly muted red for destructive actions */
+    --destructive-foreground: 30 50% 98%;
 
-    --ring: 270 60% 60%; /* Ring color based on primary (Purple) */
-    --radius: 0.5rem;
+    --ring: 215 35% 50%; /* Ring color based on primary (Classic Navy) */
+    --radius: 0.375rem; /* Slightly less rounded for a crisper feel */
 
     /* Sidebar colors - Light Mode */
-    --sidebar-background: 0 0% 96%; 
-    --sidebar-foreground: 240 10% 10%;
-    --sidebar-primary: 270 60% 55%; 
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 240 10% 3.9%;
-    --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 270 60% 60%;
+    --sidebar-background: 30 40% 96%; 
+    --sidebar-foreground: 20 15% 30%;
+    --sidebar-primary: 215 35% 38%; 
+    --sidebar-primary-foreground: 30 50% 98%;
+    --sidebar-accent: 30 30% 92%;
+    --sidebar-accent-foreground: 20 15% 25%;
+    --sidebar-border: 30 20% 85%;
+    --sidebar-ring: 215 35% 50%;
   }
 
   .dark {
-    /* Xoire Luxury Theme - Dark Mode (Inspired by Xoire Logo) */
-    --background: 240 6% 6%; /* Very dark blue, almost black like logo bg */
-    --foreground: 0 0% 95%; /* Bright off-white like "OIRE" */
+    /* Xoire Luxury Theme - Old Money Inspired - Dark Mode */
+    --background: 210 15% 12%; /* Very dark, desaturated navy/charcoal */
+    --foreground: 30 30% 90%; /* Soft, off-white/light cream for text */
 
-    --muted: 240 6% 15%; /* Slightly lighter than background */
-    --muted-foreground: 0 0% 65%; /* Lighter gray for muted text */
+    --muted: 210 15% 20%; /* Slightly lighter than background */
+    --muted-foreground: 30 30% 70%; /* Lighter grey for muted text */
 
-    --popover: 240 6% 8%; /* Dark popover background */
-    --popover-foreground: 0 0% 95%;
+    --popover: 210 15% 10%; /* Dark popover background */
+    --popover-foreground: 30 30% 90%;
 
-    --card: 240 6% 8%; /* Dark card background */
-    --card-foreground: 0 0% 95%;
+    --card: 210 15% 10%; /* Dark card background */
+    --card-foreground: 30 30% 90%;
 
-    --border: 240 5% 18%; /* Subtle border for dark elements */
-    --input: 240 5% 12%; /* Dark input background */
+    --border: 210 10% 28%; /* Subtle border for dark elements */
+    --input: 210 10% 17%; /* Dark input background */
 
-    --primary: 270 70% 65%; /* Vibrant Purple from "X" */
-    --primary-foreground: 0 0% 98%; /* White for text on primary */
+    --primary: 215 40% 58%; /* Classic navy, slightly brighter for dark mode */
+    --primary-foreground: 30 30% 95%; /* Soft cream for text on primary */
 
-    --secondary: 240 6% 20%; /* A slightly lighter dark gray for subtle contrast */
-    --secondary-foreground: 0 0% 95%; /* Bright off-white for text on secondary */
+    --secondary: 210 15% 22%; /* A slightly lighter dark shade for subtle contrast */
+    --secondary-foreground: 30 30% 90%; /* Soft off-white for text on secondary */
 
-    --accent: 220 80% 60%; /* Vibrant Blue from "X" */
-    --accent-foreground: 0 0% 98%; /* White for text on accent */
+    --accent: 40 50% 60%; /* Muted gold/ochre for dark mode */
+    --accent-foreground: 210 15% 15%; /* Dark text on accent */
     
-    --destructive: 0 60% 45%; /* A deep red for destructive actions in dark mode */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 50% 60%; /* A deep, slightly muted red for destructive actions */
+    --destructive-foreground: 30 30% 95%;
 
-    --ring: 270 70% 70%; /* Ring color based on primary (Brighter Purple) */
+    --ring: 215 40% 65%; /* Ring color based on primary (Brighter Classic Navy) */
     
     /* Sidebar colors - Dark Mode */
-    --sidebar-background: 240 6% 4%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 270 70% 65%; 
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 6% 12%;
-    --sidebar-accent-foreground: 0 0% 90%;
-    --sidebar-border: 240 5% 15%;
-    --sidebar-ring: 270 70% 70%;
+    --sidebar-background: 210 15% 8%;
+    --sidebar-foreground: 30 30% 88%;
+    --sidebar-primary: 215 40% 58%; 
+    --sidebar-primary-foreground: 30 30% 95%;
+    --sidebar-accent: 210 15% 18%;
+    --sidebar-accent-foreground: 30 30% 88%;
+    --sidebar-border: 210 10% 22%;
+    --sidebar-ring: 215 40% 65%;
   }
 }
 
@@ -99,6 +108,13 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Apply serif font to specific ShadCN title components if they don't pick it up from h1-h6 */
+  .sh-card-title, /* Example if CardTitle internal class is sh-card-title */
+  .sh-dialog-title { /* Example if DialogTitle internal class is sh-dialog-title */
+    font-family: Georgia, 'Times New Roman', Times, serif;
   }
 }
 
