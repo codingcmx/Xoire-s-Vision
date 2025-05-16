@@ -6,93 +6,92 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6, .card-title, .dialog-title {
+/* h1, h2, h3, h4, h5, h6, .card-title, .dialog-title {
   font-family: Georgia, 'Times New Roman', Times, serif;
-}
+} */
 
 
 @layer base {
   :root {
-    --background: 220 10% 97%; /* Very light neutral grey */
-    --foreground: 220 20% 10%; /* Dark cool grey-blue */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --muted: 220 10% 90%;
-    --muted-foreground: 220 10% 45%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 220 10% 97%; /* Matches new light background */
-    --popover-foreground: 220 20% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --card: 220 10% 98%; /* Slightly lighter grey than background */
-    --card-foreground: 220 20% 10%;
+    --primary: 173 80% 40%; /* Teal */
+    --primary-foreground: 173 0% 98%; /* White text on teal */
 
-    --border: 220 10% 88%;
-    --input: 220 10% 88%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 30 60% 50%; /* Rich Gold */
-    --primary-foreground: 30 60% 10%; /* Dark text on gold */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 217.2 32.6% 17.5%;
 
-    --secondary: 220 10% 92%;
-    --secondary-foreground: 220 20% 9%;
-
-    --accent: 180 50% 40%; /* Classic Teal */
-    --accent-foreground: 0 0% 98%; /* Light text on accent */
+    --accent: 173 80% 40%; /* Teal to match primary */
+    --accent-foreground: 173 0% 98%; /* White text on teal */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 30 60% 60%; /* Lighter Gold for ring */
-    --radius: 0.3rem; /* Slightly crisper radius */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 173 80% 40%; /* Teal ring */
+
+    --radius: 0.5rem;
 
     /* Sidebar colors */
-    --sidebar-background: 220 10% 97%; /* Matches new light background */
-    --sidebar-foreground: 220 20% 10%;
-    --sidebar-primary: 30 60% 50%;
-    --sidebar-primary-foreground: 30 60% 10%;
-    --sidebar-accent: 220 10% 90%;
-    --sidebar-accent-foreground: 30 60% 50%;
-    --sidebar-border: 220 10% 88%;
-    --sidebar-ring: 30 60% 60%;
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 173 80% 40%;
+    --sidebar-primary-foreground: 173 0% 98%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 173 80% 40%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 173 80% 40%;
   }
 
   .dark {
-    --background: 220 15% 10%; /* Deep, cool, almost-black blue */
-    --foreground: 220 15% 90%; /* Soft, cool off-white */
+    --background: 222.2 84% 4.9%;
+    --foreground: 0 0% 98%;
 
-    --muted: 220 15% 20%;
-    --muted-foreground: 220 15% 65%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 15% 8%; /* Slightly different dark for popovers */
-    --popover-foreground: 220 15% 90%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 98%;
 
-    --card: 220 15% 12%; /* Slightly lighter dark for cards */
-    --card-foreground: 220 15% 90%;
+    --primary: 173 70% 45%; /* Slightly brighter teal for dark mode */
+    --primary-foreground: 173 0% 98%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 0 0% 98%;
 
-    --primary: 45 100% 65%; /* Luminous Gold */
-    --primary-foreground: 45 100% 10%; /* Dark text on luminous gold */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --secondary: 220 15% 20%;
-    --secondary-foreground: 220 15% 90%;
+    --accent: 173 70% 45%; /* Slightly brighter teal for dark mode */
+    --accent-foreground: 173 0% 98%;
 
-    --accent: 180 70% 55%; /* Vibrant, hopeful Teal/Cyan */
-    --accent-foreground: 180 70% 10%; /* Dark text on accent */
-
-    --destructive: 0 70% 55%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 45 100% 70%; /* Brighter Gold for ring */
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 173 70% 45%; /* Teal ring for dark mode */
     
     /* Sidebar colors - Dark Mode */
-    --sidebar-background: 220 15% 8%;
-    --sidebar-foreground: 220 15% 90%;
-    --sidebar-primary: 45 100% 65%;
-    --sidebar-primary-foreground: 45 100% 10%;
-    --sidebar-accent: 220 15% 20%;
-    --sidebar-accent-foreground: 45 100% 70%;
-    --sidebar-border: 220 15% 25%;
-    --sidebar-ring: 45 100% 70%;
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 173 70% 45%;
+    --sidebar-primary-foreground: 173 0% 98%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 173 70% 45%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 173 70% 45%;
   }
 }
 
