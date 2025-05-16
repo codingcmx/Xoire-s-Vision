@@ -188,7 +188,7 @@ export default function StyleBotApp() {
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[70vh] py-1 pr-3">
-            <div className="py-4">
+            <div className="p-4"> {/* Changed py-4 to p-4 for horizontal padding */}
               {showAiForm === 'product_recommendations' && <ProductRecForm onSubmit={handleProductRecSubmit} isSubmitting={isLoading} />}
               {showAiForm === 'style_suggestions' && <StyleGuideForm onSubmit={handleStyleGuideSubmit} isSubmitting={isLoading} />}
             </div>
