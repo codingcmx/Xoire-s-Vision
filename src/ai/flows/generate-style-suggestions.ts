@@ -15,8 +15,9 @@ import {z} from 'genkit';
 
 // Define the input schema
 const GenerateStyleSuggestionsInputSchema = z.object({
-  skinTone: z.string().describe('The user\'s skin tone (e.g., fair, medium, dark).'),
-  preferences: z.string().describe('The user\'s style preferences (e.g., modern, classic, bohemian).'),
+  skinTone: z.string().describe("The user's skin tone (e.g., fair, medium, dark)."),
+  preferences: z.string().describe("The user's style preferences (e.g., modern, classic, bohemian)."),
+  gender: z.enum(['male', 'female', 'other']).describe("The user's gender identity, to help tailor suggestions (e.g., male, female, other)."),
   currentTrends: z.string().optional().describe('Current fashion trends the user wants to consider.'),
 });
 
@@ -41,12 +42,14 @@ const generateStyleSuggestionsPrompt = ai.definePrompt({
   name: 'generateStyleSuggestionsPrompt',
   input: {schema: GenerateStyleSuggestionsInputSchema},
   output: {schema: GenerateStyleSuggestionsOutputSchema},
-  prompt: `You are a personal stylist. Based on the user's skin tone, style preferences, and current trends, provide personalized style suggestions.
-Make your suggestions engaging by including relevant emojis where appropriate (e.g., ✨, 🎨, 👍, 👗, 👖, 👠, 💄).
+  prompt: `You are a personal stylist. Based on the user's skin tone, style preferences, gender, and current trends, provide personalized style suggestions.
+Tailor your advice based on the provided gender (e.g., suggesting different clothing items or styles typically associated with 'male', 'female', or offering more neutral/versatile options for 'other', while always respecting the user's overall style preferences).
+Make your suggestions engaging by including relevant emojis where appropriate (e.g., ✨, 🎨, 👍, 👗, 👖, 👠, 💄, 👔, 👟).
 Each suggestion in the array should be a concise piece of advice. If a single piece of advice involves multiple distinct points, consider formatting it as a mini bullet list within that string.
 
 Skin Tone: {{{skinTone}}}
 Preferences: {{{preferences}}}
+Gender: {{{gender}}}
 Current Trends: {{{currentTrends}}}
 
 Suggestions:`, // The AI will fill this field in

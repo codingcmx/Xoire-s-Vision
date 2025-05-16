@@ -16,12 +16,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { GenerateProductRecommendationsInput } from "@/ai/flows/generate-product-recommendations";
 import type { GenerateStyleSuggestionsInput } from "@/ai/flows/generate-style-suggestions";
 
 // Schema for Product Recommendations
 const productRecSchema = z.object({
-  userPreferences: z.string().min(3, "Please describe your preferences in a bit more detail, or provide a general style like 'bohemian' or 'classic'.").max(500, "Please keep your preferences under 500 characters."),
+  userPreferences: z.string().min(3, "Please describe your preferences (min 3 characters). e.g., 'bohemian', 'classic', 'comfy streetwear'.").max(500, "Preferences are too long (max 500 characters)."),
 });
 
 interface ProductRecFormProps {
@@ -64,9 +65,12 @@ export function ProductRecForm({ onSubmit, isSubmitting }: ProductRecFormProps) 
 
 // Schema for Style Suggestions
 const styleGuideSchema = z.object({
-  skinTone: z.string().min(2, "Please describe your skin tone.").max(50, "Please keep skin tone description brief."),
-  preferences: z.string().min(3, "Please describe your style preferences in a bit more detail, or provide a general style.").max(500, "Please keep your preferences under 500 characters."),
-  currentTrends: z.string().max(200, "Please keep current trends brief.").optional(),
+  skinTone: z.string().min(2, "Please describe your skin tone (min 2 characters).").max(50, "Skin tone description is too long (max 50 characters)."),
+  preferences: z.string().min(3, "Please describe your style preferences (min 3 characters).").max(500, "Preferences are too long (max 500 characters)."),
+  gender: z.enum(['male', 'female', 'other'], {
+    required_error: "Please select your gender.",
+  }),
+  currentTrends: z.string().max(200, "Current trends description is too long (max 200 characters).").optional(),
 });
 
 interface StyleGuideFormProps {
@@ -110,6 +114,47 @@ export function StyleGuideForm({ onSubmit, isSubmitting }: StyleGuideFormProps) 
                 <Textarea placeholder="e.g., Modern, classic, bohemian, casual, formal..." {...field} />
               </FormControl>
               <FormDescription>What kind of look are you going for? Even a single style word helps!</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="gender"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Gender</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="female" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Female
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="male" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      Male
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="other" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Other</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormDescription>This helps us tailor style suggestions.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
