@@ -183,14 +183,16 @@ export default function StyleBotApp() {
             </DialogTitle>
             <DialogDescription>
               {showAiForm === 'product_recommendations' 
-                ? 'Tell us about your preferences and past purchases so we can find products you might like.'
+                ? 'Tell us about your preferences so we can find products you might like.'
                 : 'Help us understand your style so we can offer personalized advice.'}
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            {showAiForm === 'product_recommendations' && <ProductRecForm onSubmit={handleProductRecSubmit} isSubmitting={isLoading} />}
-            {showAiForm === 'style_suggestions' && <StyleGuideForm onSubmit={handleStyleGuideSubmit} isSubmitting={isLoading} />}
-          </div>
+          <ScrollArea className="max-h-[70vh] py-1 pr-3">
+            <div className="py-4">
+              {showAiForm === 'product_recommendations' && <ProductRecForm onSubmit={handleProductRecSubmit} isSubmitting={isLoading} />}
+              {showAiForm === 'style_suggestions' && <StyleGuideForm onSubmit={handleStyleGuideSubmit} isSubmitting={isLoading} />}
+            </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
 
@@ -214,3 +216,4 @@ export default function StyleBotApp() {
     </div>
   );
 }
+
