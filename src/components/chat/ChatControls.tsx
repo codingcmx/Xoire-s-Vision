@@ -1,9 +1,10 @@
+
 "use client";
 
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { SendHorizonal, ShoppingBag, Palette, HelpCircle, Headset, PhoneForwarded, Sparkles } from 'lucide-react';
+import { SendHorizonal, ShoppingBag, Palette, HelpCircle, Headset, PhoneForwarded } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ChatControlsProps {
@@ -49,7 +50,7 @@ export function ChatControls({ onSendMessage, isSending, onTriggerFeature }: Cha
                   size="icon"
                   onClick={() => onTriggerFeature(feature)}
                   aria-label={label}
-                  className="text-muted-foreground hover:text-primary hover:border-primary"
+                  className="text-muted-foreground hover:text-primary-foreground hover:border-primary"
                 >
                   <Icon className="h-5 w-5" />
                 </Button>
