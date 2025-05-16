@@ -6,88 +6,93 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+h1, h2, h3, h4, h5, h6, .card-title, .dialog-title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
 @layer base {
   :root {
-    --background: 0 0% 96%; /* Light grey */
-    --foreground: 0 0% 10%; /* Dark text */
+    --background: 220 10% 97%; /* Very light neutral grey */
+    --foreground: 220 20% 10%; /* Dark cool grey-blue */
 
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 220 10% 90%;
+    --muted-foreground: 220 10% 45%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover: 220 10% 97%; /* Matches new light background */
+    --popover-foreground: 220 20% 10%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card: 220 10% 98%; /* Slightly lighter grey than background */
+    --card-foreground: 220 20% 10%;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
+    --border: 220 10% 88%;
+    --input: 220 10% 88%;
 
-    --primary: 180 100% 25%; /* Teal - HSL for #008080 */
-    --primary-foreground: 0 0% 98%; /* Light text on primary */
+    --primary: 30 60% 50%; /* Rich Gold */
+    --primary-foreground: 30 60% 10%; /* Dark text on gold */
 
-    --secondary: 0 0% 94%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 220 10% 92%;
+    --secondary-foreground: 220 20% 9%;
 
-    --accent: 285 100% 50%; /* Electric Purple - HSL for #BF00FF */
+    --accent: 180 50% 40%; /* Classic Teal */
     --accent-foreground: 0 0% 98%; /* Light text on accent */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 180 100% 35%; /* Slightly lighter teal for ring */
-    --radius: 0.5rem;
+    --ring: 30 60% 60%; /* Lighter Gold for ring */
+    --radius: 0.3rem; /* Slightly crisper radius */
 
-    /* Sidebar colors - will also default to a simpler scheme */
-    --sidebar-background: 0 0% 96%;
-    --sidebar-foreground: 0 0% 10%;
-    --sidebar-primary: 180 100% 25%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 180 100% 25%;
-    --sidebar-border: 0 0% 89.8%;
-    --sidebar-ring: 180 100% 35%;
+    /* Sidebar colors */
+    --sidebar-background: 220 10% 97%; /* Matches new light background */
+    --sidebar-foreground: 220 20% 10%;
+    --sidebar-primary: 30 60% 50%;
+    --sidebar-primary-foreground: 30 60% 10%;
+    --sidebar-accent: 220 10% 90%;
+    --sidebar-accent-foreground: 30 60% 50%;
+    --sidebar-border: 220 10% 88%;
+    --sidebar-ring: 30 60% 60%;
   }
 
   .dark {
-    --background: 0 0% 10%;
-    --foreground: 0 0% 98%;
+    --background: 220 15% 10%; /* Deep, cool, almost-black blue */
+    --foreground: 220 15% 90%; /* Soft, cool off-white */
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 15% 65%;
 
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 220 15% 8%; /* Slightly different dark for popovers */
+    --popover-foreground: 220 15% 90%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 98%;
+    --card: 220 15% 12%; /* Slightly lighter dark for cards */
+    --card-foreground: 220 15% 90%;
 
-    --border: 0 0% 19.8%;
-    --input: 0 0% 19.8%;
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
 
-    --primary: 180 100% 35%; /* Lighter Teal for dark mode */
-    --primary-foreground: 0 0% 9%;
+    --primary: 45 100% 65%; /* Luminous Gold */
+    --primary-foreground: 45 100% 10%; /* Dark text on luminous gold */
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 220 15% 20%;
+    --secondary-foreground: 220 15% 90%;
 
-    --accent: 285 100% 60%; /* Lighter Purple for dark mode */
-    --accent-foreground: 0 0% 9%;
+    --accent: 180 70% 55%; /* Vibrant, hopeful Teal/Cyan */
+    --accent-foreground: 180 70% 10%; /* Dark text on accent */
 
-    --destructive: 0 62.8% 50.6%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 180 100% 45%;
+    --ring: 45 100% 70%; /* Brighter Gold for ring */
     
     /* Sidebar colors - Dark Mode */
-    --sidebar-background: 0 0% 5%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 180 100% 35%;
-    --sidebar-primary-foreground: 0 0% 9%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 180 100% 45%;
-    --sidebar-border: 0 0% 19.8%;
-    --sidebar-ring: 180 100% 45%;
+    --sidebar-background: 220 15% 8%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-primary: 45 100% 65%;
+    --sidebar-primary-foreground: 45 100% 10%;
+    --sidebar-accent: 220 15% 20%;
+    --sidebar-accent-foreground: 45 100% 70%;
+    --sidebar-border: 220 15% 25%;
+    --sidebar-ring: 45 100% 70%;
   }
 }
 
@@ -118,13 +123,13 @@ body {
   animation: subtle-slide-in-up 0.3s ease-out;
 }
 
-/* Custom animation for bot icon blinking */
+/* Custom animation for bot icon eyes blinking */
 @keyframes bot-blink-animation {
   0%, 48%, 52%, 100% { /* Stay opaque for most of the cycle, quick blink */
     opacity: 1;
   }
-  50% { /* Blink part */
-    opacity: 0.3;
+  50% { /* Blink part - eyes disappear */
+    opacity: 0;
   }
 }
 
