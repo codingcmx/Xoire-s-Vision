@@ -18,7 +18,7 @@ const GenerateStyleSuggestionsInputSchema = z.object({
   skinTone: z.string().describe("The user's skin tone (e.g., fair, medium, dark)."),
   preferences: z.string().describe("The user's style preferences (e.g., modern, classic, bohemian)."),
   gender: z.enum(['male', 'female', 'other']).describe("The user's gender identity, to help tailor suggestions (e.g., male, female, other)."),
-  occasion: z.string().optional().describe("The specific occasion the user is dressing for (e.g., wedding, casual outing, work)."),
+  occasion: z.string().optional().describe("The specific occasion the user is dressing for (e.g., wedding, casual outing, work, your wear today)."),
   currentTrends: z.string().optional().describe('Current fashion trends the user wants to consider.'),
 });
 
@@ -44,16 +44,20 @@ const generateStyleSuggestionsPrompt = ai.definePrompt({
   input: {schema: GenerateStyleSuggestionsInputSchema},
   output: {schema: GenerateStyleSuggestionsOutputSchema},
   prompt: `You are a personal stylist. Based on the user's skin tone, style preferences, gender, occasion (if provided), and current trends, provide personalized style suggestions.
-Tailor your advice based on the provided gender (e.g., suggesting different clothing items or styles typically associated with 'male', 'female', or offering more neutral/versatile options for 'other', while always respecting the user's overall style preferences).
+Tailor your advice based on the provided gender.
 If an occasion is specified (e.g., 'wedding guest', 'beach vacation', 'office party'), ensure your suggestions are appropriate for that context.
 Make your suggestions engaging by including relevant emojis where appropriate (e.g., ✨, 🎨, 👍, 👗, 👖, 👠, 💄, 👔, 👟).
 Each suggestion in the array should be a concise piece of advice. If a single piece of advice involves multiple distinct points, consider formatting it as a mini bullet list within that string.
+
+**For 'female' gender:**
+*   Consider suggesting complementary **lipstick shades** that would pair well with the recommended outfits or color palettes.
+*   Where appropriate and fitting for the overall style/occasion (e.g., not for very casual or sporty looks unless specifically requested), suggest **earring styles** (e.g., studs, hoops, chandelier) that would enhance the look. Be mindful to suggest earrings only when they genuinely add to the ensemble.
 
 Skin Tone: {{{skinTone}}}
 Preferences: {{{preferences}}}
 Gender: {{{gender}}}
 {{#if occasion}}Occasion: {{{occasion}}}{{/if}}
-Current Trends: {{{currentTrends}}}
+{{#if currentTrends}}Current Trends: {{{currentTrends}}}{{/if}}
 
 Suggestions:`, // The AI will fill this field in
 });
