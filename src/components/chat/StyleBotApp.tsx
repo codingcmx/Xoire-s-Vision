@@ -46,7 +46,7 @@ export default function StyleBotApp() {
 
 
   useEffect(() => {
-    addMessage('bot', "Hello! I'm StyleBot. How can I help you today? You can ask for product recommendations, style advice, or see FAQs.");
+    addMessage('bot', "Hello! I'm Vision. How can I help you today? You can ask for product recommendations, style advice, or see FAQs.");
   }, [addMessage]);
 
   const handleFaqSearch = (userInput: string): string | null => {
