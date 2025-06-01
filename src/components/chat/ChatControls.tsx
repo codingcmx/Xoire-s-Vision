@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SendHorizonal, ShoppingBag, Palette, HelpCircle, Headset, PhoneForwarded } from 'lucide-react';
@@ -15,6 +15,11 @@ interface ChatControlsProps {
 
 export function ChatControls({ onSendMessage, isSending, onTriggerFeature }: ChatControlsProps) {
   const [inputValue, setInputValue] = useState('');
+  const [isClient, setIsClient] = useState(false); // Added state for client-side rendering
+
+  useEffect(() => {
+    setIsClient(true); // Set to true after component mounts on the client
+  }, []);
 
   const handleSend = () => {
     if (inputValue.trim()) {
@@ -41,26 +46,28 @@ export function ChatControls({ onSendMessage, isSending, onTriggerFeature }: Cha
   return (
     <TooltipProvider>
       <div className="bg-card border-t p-4 shadow- ऊपर">
-        <div className="flex items-center space-x-2 mb-3">
-          {actionButtons.map(({ feature, label, icon: Icon, hint }) => (
-            <Tooltip key={feature}>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => onTriggerFeature(feature)}
-                  aria-label={label}
-                  className="text-muted-foreground hover:text-primary-foreground hover:bg-primary hover:border-primary"
-                >
-                  <Icon className="h-5 w-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>{hint}</p>
-              </TooltipContent>
-            </Tooltip>
-          ))}
-        </div>
+        {isClient && ( // Conditionally render the part with tooltips
+          <div className="flex items-center space-x-2 mb-3">
+            {actionButtons.map(({ feature, label, icon: Icon, hint }) => (
+              <Tooltip key={feature}>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => onTriggerFeature(feature)}
+                    aria-label={label}
+                    className="text-muted-foreground hover:text-primary-foreground hover:bg-primary hover:border-primary"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <p>{hint}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        )}
         <div className="flex items-center space-x-2">
           <Input
             type="text"
