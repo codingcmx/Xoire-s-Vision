@@ -26,7 +26,7 @@ export function ChatHeader() {
         <path d="M15 13v2" className={cn("animate-bot-blink")} />
         <path d="M9 13v2" className={cn("animate-bot-blink")} />
       </svg>
-      <h1 className="text-xl font-semibold font-serif">StyleBot-Xoire</h1>
+      <h1 className="text-xl font-semibold font-serif">Vision</h1>
     </header>
   );
 }
