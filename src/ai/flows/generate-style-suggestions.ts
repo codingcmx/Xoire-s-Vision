@@ -20,6 +20,7 @@ const GenerateStyleSuggestionsInputSchema = z.object({
   gender: z.enum(['male', 'female', 'other']).describe("The user's gender identity, to help tailor suggestions (e.g., male, female, other)."),
   occasion: z.string().optional().describe("The specific occasion the user is dressing for (e.g., wedding, casual outing, work, your wear today)."),
   currentTrends: z.string().optional().describe('Current fashion trends the user wants to consider.'),
+  previousSuggestions: z.array(z.string()).optional().describe("An array of style suggestions already provided to the user in previous turns for the same request, to help generate distinct new ideas."),
 });
 
 export type GenerateStyleSuggestionsInput = z.infer<typeof GenerateStyleSuggestionsInputSchema>;
@@ -61,11 +62,22 @@ Each suggestion in the array should be a concise piece of advice. If a single pi
 *   Consider suggesting complementary **lipstick shades** that would pair well with the recommended outfits or color palettes (e.g., 'A {color:Dusty Rose:#DCAE96} lipstick would be lovely.').
 *   Where appropriate and fitting for the overall style/occasion (e.g., not for very casual or sporty looks unless specifically requested), suggest **earring styles** (e.g., studs, hoops, chandelier) that would enhance the look. Be mindful to suggest earrings only when they genuinely add to the ensemble.
 
+{{#if previousSuggestions}}
+You have already provided the following suggestions to the user for this request:
+{{#each previousSuggestions}}
+- "{{this}}"
+{{/each}}
+Please provide **NEW and DISTINCT** suggestions that build upon or offer alternatives to these, if possible.
+{{/if}}
+
 Skin Tone: {{{skinTone}}}
 Preferences: {{{preferences}}}
 Gender: {{{gender}}}
 {{#if occasion}}Occasion: {{{occasion}}}{{/if}}
 {{#if currentTrends}}Current Trends: {{{currentTrends}}}{{/if}}
+
+Provide 2-3 new, distinct style suggestions.
+If you cannot generate any genuinely new and distinct suggestions beyond what might have been previously provided, return a single suggestion in the array like: "I've shared my best new ideas for you based on your preferences!"
 
 Suggestions:`, // The AI will fill this field in
 });
@@ -79,7 +91,10 @@ const generateStyleSuggestionsFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await generateStyleSuggestionsPrompt(input);
-    return output!;
+    if (!output || !output.suggestions) {
+        return { suggestions: ["Sorry, I'm having a bit of trouble coming up with style ideas right now. Please try again shortly!"] };
+    }
+    return output;
   }
 );
 

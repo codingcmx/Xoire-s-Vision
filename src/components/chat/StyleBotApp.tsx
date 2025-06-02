@@ -63,8 +63,6 @@ export default function StyleBotApp() {
   const fetchMoreProductRecommendations = async (userPreferences: string) => {
     setIsLoading(true);
     const inputForFlow: GenerateProductRecommendationsInput = { userPreferences };
-    // The AI's text response (e.g., "Okay, looking for more...") is already added by handleSendMessage.
-    // We now add the AI's loading card for the new recommendations.
     const loadingMsgId = addMessage('ai', undefined, 'product_recommendations', undefined, true);
 
     try {
@@ -77,15 +75,63 @@ export default function StyleBotApp() {
       } else {
         updateMessage(loadingMsgId, {
           data: result as GenerateProductRecommendationsOutput,
-          originalInput: inputForFlow // Store the input that generated *these* recommendations
+          originalInput: inputForFlow
         });
-        // Optional: Add a follow-up bot message specifically for "more" results.
-        // setTimeout(() => addMessage('bot', "Here are some additional ideas! Let me know if anything catches your eye."), 600);
       }
     } catch (error: any) {
       console.error("Client-side error calling getProductRecommendationsAction for more:", error);
       const errorMessage = error.message || "An unexpected error occurred while fetching more recommendations.";
       updateMessage(loadingMsgId, { text: `Sorry, an error occurred while getting more recommendations. ${errorMessage}`, type: 'text' });
+      toast({ title: "Error", description: errorMessage, variant: "destructive" });
+    }
+    setIsLoading(false);
+  };
+
+  const fetchMoreStyleSuggestions = async (stringifiedOriginalInput: string) => {
+    setIsLoading(true);
+    let originalInput: GenerateStyleSuggestionsInput;
+    try {
+      originalInput = JSON.parse(stringifiedOriginalInput);
+    } catch (e) {
+      console.error("Failed to parse originalStyleRequest:", e);
+      toast({ title: "Error", description: "Could not understand the previous style request.", variant: "destructive" });
+      setIsLoading(false);
+      return;
+    }
+
+    // Find previous suggestions to pass along
+    let previousSuggestions: string[] = [];
+    const originalStyleAdviceMessage = messages.find(
+      (msg) => msg.type === 'style_suggestions' && 
+               JSON.stringify(msg.originalInput) === stringifiedOriginalInput // A bit fragile, but best effort
+    );
+    if (originalStyleAdviceMessage && originalStyleAdviceMessage.data?.suggestions) {
+      previousSuggestions = originalStyleAdviceMessage.data.suggestions;
+    }
+    
+    const inputForFlow: GenerateStyleSuggestionsInput = { 
+      ...originalInput, 
+      previousSuggestions 
+    };
+    const loadingMsgId = addMessage('ai', undefined, 'style_suggestions', undefined, true);
+
+    try {
+      const result = await getStyleSuggestionsAction(inputForFlow);
+      if ((result as ActionError).error) {
+        const errorResult = result as ActionError;
+        console.error("Error getting more style suggestions:", errorResult.error.message);
+        updateMessage(loadingMsgId, { text: `Sorry, I couldn't get more style advice. ${errorResult.error.message}`, type: 'text' });
+        toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
+      } else {
+        updateMessage(loadingMsgId, {
+          data: result as GenerateStyleSuggestionsOutput,
+          originalInput: originalInput // Store the original input that led to *this* request (not the "more" input)
+        });
+      }
+    } catch (error: any) {
+      console.error("Client-side error calling getStyleSuggestionsAction for more:", error);
+      const errorMessage = error.message || "An unexpected error occurred while fetching more style advice.";
+      updateMessage(loadingMsgId, { text: `Sorry, an error occurred while getting more style advice. ${errorMessage}`, type: 'text' });
       toast({ title: "Error", description: errorMessage, variant: "destructive" });
     }
     setIsLoading(false);
@@ -105,12 +151,13 @@ export default function StyleBotApp() {
       const loadingMsgId = addMessage('bot', undefined, 'text', undefined, true);
       try {
         const chatHistoryForContext = messages
-          .slice(-6) // Get last 6 messages for context
+          .slice(-6) 
           .map(m => ({
             sender: m.sender as 'user' | 'bot' | 'ai',
             text: m.text,
             type: m.type,
             originalUserPreferences: m.type === 'product_recommendations' && m.originalInput && 'userPreferences' in m.originalInput ? (m.originalInput as GenerateProductRecommendationsInput).userPreferences : undefined,
+            originalStyleRequest: m.type === 'style_suggestions' && m.originalInput && 'skinTone' in m.originalInput ? (m.originalInput as GenerateStyleSuggestionsInput) : undefined,
           }));
 
         const result = await getChatResponseAction({ userInput: text, chatHistory: chatHistoryForContext });
@@ -126,9 +173,12 @@ export default function StyleBotApp() {
 
           if (chatResponse.triggerAction === 'fetch_more_products' && chatResponse.actionInput) {
             fetchMoreProductRecommendations(chatResponse.actionInput);
+          } else if (chatResponse.triggerAction === 'fetch_more_style_suggestions' && chatResponse.actionInput) {
+            fetchMoreStyleSuggestions(chatResponse.actionInput);
           }
         }
-      } catch (error: any) {
+      } catch (error: any)
+       {
         console.error("Client-side error calling getChatResponseAction:", error);
         const errorMessage = error.message || "An unexpected error occurred.";
         updateMessage(loadingMsgId, { text: `Sorry, I couldn't process that right now. ${errorMessage}`, type: 'text' });
@@ -172,12 +222,11 @@ export default function StyleBotApp() {
       } else {
         updateMessage(loadingMsgId, {
             data: result as GenerateProductRecommendationsOutput,
-            originalInput: data // Store the input that generated these recommendations
+            originalInput: data 
         });
-        // Follow-up message from the bot
         setTimeout(() => {
             addMessage('bot', "Hope you like these product ideas! ✨ Would you also be interested in some personalized style and color advice to complement them? I can help with that too!");
-        }, 600); // Small delay to ensure recommendation card renders first
+        }, 600); 
       }
     } catch (error: any) {
       console.error("Client-side error calling getProductRecommendationsAction:", error);
@@ -203,7 +252,7 @@ export default function StyleBotApp() {
       } else {
         updateMessage(loadingMsgId, {
             data: result as GenerateStyleSuggestionsOutput,
-            originalInput: data // Store the input that generated these suggestions
+            originalInput: data 
         });
       }
     } catch (error: any) {
@@ -235,7 +284,7 @@ export default function StyleBotApp() {
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[70vh] py-1 pr-3">
-            <div className="p-4"> {/* Changed py-4 to p-4 for horizontal padding */}
+            <div className="p-4"> 
               {showAiForm === 'product_recommendations' && <ProductRecForm onSubmit={handleProductRecSubmit} isSubmitting={isLoading} />}
               {showAiForm === 'style_suggestions' && <StyleGuideForm onSubmit={handleStyleGuideSubmit} isSubmitting={isLoading} />}
             </div>

@@ -21,7 +21,7 @@ const GenerateChatResponseInputSchema = z.object({
     text: z.string().optional(),
     type: z.enum(['text', 'product_recommendations', 'style_suggestions', 'form_request']).optional(),
     originalUserPreferences: z.string().optional().describe("The user's original preferences if this message was a product recommendation result."),
-    // originalStyleRequest: z.custom<GenerateStyleSuggestionsInput>().optional().describe("The user's original input if this message was a style suggestion result."), // For future "more style advice" enhancement
+    originalStyleRequest: z.custom<GenerateStyleSuggestionsInput>().optional().describe("The user's original input if this message was a style suggestion result."),
   })).optional().describe("Previous messages in the conversation, for context. Includes message type and potentially original inputs for AI features."),
 });
 
@@ -30,8 +30,8 @@ export type GenerateChatResponseInput = z.infer<typeof GenerateChatResponseInput
 // Define the output schema
 const GenerateChatResponseOutputSchema = z.object({
   aiResponse: z.string().describe('The AI-generated conversational response from Vision.'),
-  triggerAction: z.enum(['fetch_more_products']).optional().describe("If an action needs to be triggered by the client, like fetching more products."),
-  actionInput: z.string().optional().describe("The input for the triggered action, e.g., original user preferences string for fetching more products."),
+  triggerAction: z.enum(['fetch_more_products', 'fetch_more_style_suggestions']).optional().describe("If an action needs to be triggered by the client, like fetching more products or style suggestions."),
+  actionInput: z.string().optional().describe("The input for the triggered action, e.g., original user preferences string for fetching more products, or stringified GenerateStyleSuggestionsInput for fetching more style suggestions."),
 });
 
 export type GenerateChatResponseOutput = z.infer<typeof GenerateChatResponseOutputSchema>;
@@ -58,8 +58,14 @@ You can help with:
 
 **Handling Follow-up Requests for "More":**
 - If the user asks for **more style advice** (e.g., "tell me more styles", "any other ideas for outfits?", "more suggestions for style"):
-    - Look at the chatHistory to understand their original request (skin tone, preferences, occasion if any, gender). This information might be in a user message preceding a 'style_suggestions' card display from the bot/ai.
-    - Provide 2-3 *new and distinct* style suggestions as a text-based list in your response. Frame it like, "Okay, building on that, here are a couple more ideas for you: ..." or "Sure, here are some more style tips based on your preferences: ...". Make these new suggestions distinct from anything previously suggested if possible.
+    - Iterate backwards through the last few messages in \`chatHistory\`. If you find a message from 'ai' or 'bot' with \`type: 'style_suggestions'\` that has an \`originalStyleRequest\` object:
+        - Set your \`aiResponse\` to something like: "Okay, let me prepare some more style ideas for you based on your previous request!" or "Sure, let's brainstorm some additional style suggestions!"
+        - Set \`triggerAction\` to \`fetch_more_style_suggestions\`.
+        - Set \`actionInput\` to that \`originalStyleRequest\` (the system will handle stringifying it).
+        - Then, stop processing for this turn.
+    - Else (if no usable \`originalStyleRequest\` is found in recent history):
+        - Set your \`aiResponse\` to: "I can certainly help you with more style advice! The best way to do this is through the 'Style Advice' feature. Please tap that button, and you can provide your preferences again for fresh ideas. ✨"
+        - Do NOT set \`triggerAction\` or \`actionInput\`.
 - If the user asks for **more product recommendations** (e.g., "show me more products", "other recommendations?", "more product ideas"):
     - Check the \`chatHistory\`. Iterate backwards through the last few messages. If you find a message from 'ai' or 'bot' with \`type: 'product_recommendations'\` that has \`originalUserPreferences\` (a non-empty string):
         - Set your \`aiResponse\` to something like: "Okay, let me find some more products for you based on your previous request!" or "Sure, looking for more products similar to what you liked..."
@@ -77,7 +83,7 @@ Current conversation:
 {{#if text}}
   {{{text}}}
 {{else if type}}
-  [Displayed a '{{type}}' card for the user{{#if originalUserPreferences}} with initial preferences: "{{originalUserPreferences}}"{{/if}}]
+  [Displayed a '{{type}}' card for the user{{#if originalUserPreferences}} with initial preferences: "{{originalUserPreferences}}"{{/if}}{{#if originalStyleRequest}} based on their style input.{{/if}}]
 {{else}}
   [Interacted with a feature]
 {{/if}}
@@ -158,17 +164,17 @@ const generateChatResponseFlow = ai.defineFlow(
     outputSchema: GenerateChatResponseOutputSchema,
   },
   async input => {
-    // Filter out messages that are purely system messages or have no usable text/type for context
     const filteredChatHistory = input.chatHistory?.filter(m => {
         if (m.text && m.text.trim() !== '') return true;
         if (m.type && (m.type === 'product_recommendations' || m.type === 'style_suggestions' || m.type === 'form_request')) return true;
-        if (m.originalUserPreferences) return true; // Keep messages if they have original preferences
+        if (m.originalUserPreferences || m.originalStyleRequest) return true;
         return false;
-    }).map(m => ({ // Ensure all relevant fields are passed
+    }).map(m => ({
         sender: m.sender,
         text: m.text,
         type: m.type,
         originalUserPreferences: m.originalUserPreferences,
+        originalStyleRequest: m.originalStyleRequest, // Pass this through
     }));
 
     const {output} = await generateChatResponsePrompt({
@@ -177,16 +183,33 @@ const generateChatResponseFlow = ai.defineFlow(
     });
 
     if (!output) {
-      // Fallback response if AI fails to generate
       return { aiResponse: "I'm sorry, I'm having a little trouble formulating a response right now. Could you try asking again? 🤔" };
     }
-    // Ensure aiResponse is always set, even if triggerAction is present
     if (!output.aiResponse && output.triggerAction) {
-        // This case should be handled by the prompt, but as a fallback:
-        output.aiResponse = "Okay, let me get that for you...";
+        if (output.triggerAction === 'fetch_more_products') {
+            output.aiResponse = "Okay, let me find some more products for you!";
+        } else if (output.triggerAction === 'fetch_more_style_suggestions') {
+            output.aiResponse = "Sure, let me gather some more style ideas for you!";
+        } else {
+            output.aiResponse = "Okay, let me get that for you...";
+        }
     } else if (!output.aiResponse) {
         output.aiResponse = "I'm not sure how to respond to that. Can you try rephrasing? 🤔";
     }
+
+    // Ensure actionInput is stringified if it's an object (like originalStyleRequest)
+    if (output.actionInput && typeof output.actionInput === 'object') {
+        try {
+            output.actionInput = JSON.stringify(output.actionInput);
+        } catch (e) {
+            console.error("Failed to stringify actionInput:", e);
+            // Fallback or error handling if stringification fails
+            output.aiResponse = "I encountered an issue preparing that request. Please try again.";
+            output.triggerAction = undefined;
+            output.actionInput = undefined;
+        }
+    }
+
 
     return output;
   }
