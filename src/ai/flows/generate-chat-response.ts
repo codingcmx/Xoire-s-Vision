@@ -16,8 +16,9 @@ const GenerateChatResponseInputSchema = z.object({
   userInput: z.string().describe("The user's message to StyleBot."),
   chatHistory: z.array(z.object({
     sender: z.enum(['user', 'bot', 'ai']),
-    text: z.string().optional(), // Make text optional as some messages might be cards
-  })).optional().describe("Previous messages in the conversation, for context."),
+    text: z.string().optional(),
+    type: z.enum(['text', 'product_recommendations', 'style_suggestions', 'form_request']).optional(),
+  })).optional().describe("Previous messages in the conversation, for context. Includes message type."),
 });
 
 export type GenerateChatResponseInput = z.infer<typeof GenerateChatResponseInputSchema>;
@@ -49,11 +50,29 @@ You can help with:
 - Style and color advice: If a user is interested, guide them to use the 'Style Advice' feature by saying: "Fantastic! 🎨 To give you the best style advice, please tap the 'Style Advice' button so I can get a few details."
 - Answering FAQs.
 
+**Handling Follow-up Requests for "More":**
+- If the user asks for **more style advice** (e.g., "tell me more styles", "any other ideas for outfits?", "more suggestions for style"):
+    - Look at the chatHistory to understand their original request (skin tone, preferences, occasion if any, gender). This information might be in a user message preceding a 'style_suggestions' card display from the bot/ai.
+    - Provide 2-3 *new and distinct* style suggestions as a text-based list in your response. Frame it like, "Okay, building on that, here are a couple more ideas for you: ..." or "Sure, here are some more style tips based on your preferences: ...". Make these new suggestions distinct from anything previously suggested if possible.
+- If the user asks for **more product recommendations** (e.g., "show me more products", "other recommendations?", "more product ideas"):
+    - Acknowledge their request.
+    - Then, guide them to use the dedicated feature again for the best results: "I can certainly help you find more products! The best way to do this is through the 'Product Ideas' feature. Please tap that button, and you can refine your search or use your previous preferences to see different options from our catalog. ✨"
+
 Current conversation:
 {{#if chatHistory}}
 {{#each chatHistory}}
 {{#if text}}
 {{sender}}: {{{text}}}
+{{else}}
+{{! This handles messages that were cards/features and didn't have direct 'text' }}
+{{#if (eq type "product_recommendations")}}
+{{sender}}: [Displayed product recommendations card]
+{{else if (eq type "style_suggestions")}}
+{{sender}}: [Displayed style suggestions card]
+{{else}}
+{{! Fallback for other non-text types if necessary, though less common in history }}
+{{sender}}: [Displayed a feature card]
+{{/if}}
 {{/if}}
 {{/each}}
 {{/if}}
@@ -132,8 +151,12 @@ const generateChatResponseFlow = ai.defineFlow(
     outputSchema: GenerateChatResponseOutputSchema,
   },
   async input => {
-    // Filter out messages without text for the AI prompt context
-    const filteredChatHistory = input.chatHistory?.filter(m => m.text && m.text.trim() !== '');
+    // Filter out messages that are purely system messages or have no usable text/type for context
+    const filteredChatHistory = input.chatHistory?.filter(m => {
+        if (m.text && m.text.trim() !== '') return true;
+        if (m.type && (m.type === 'product_recommendations' || m.type === 'style_suggestions')) return true; // Keep card indicators
+        return false;
+    });
 
     const {output} = await generateChatResponsePrompt({
         userInput: input.userInput,

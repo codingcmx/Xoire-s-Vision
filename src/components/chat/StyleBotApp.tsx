@@ -72,10 +72,11 @@ export default function StyleBotApp() {
       const loadingMsgId = addMessage('bot', undefined, 'text', undefined, true);
       try {
         const chatHistoryForContext = messages
-          .slice(-5)
+          .slice(-5) // Get last 5 messages for context
           .map(m => ({ 
-            sender: m.sender as 'user' | 'bot' | 'ai', // Ensure correct enum type
-            text: m.text || (m.type !== 'text' ? `[${m.type.replace(/_/g, ' ')} displayed]` : '') 
+            sender: m.sender as 'user' | 'bot' | 'ai',
+            text: m.text, // Pass text directly
+            type: m.type, // Pass message type
           }));
         
         const result = await getChatResponseAction({ userInput: text, chatHistory: chatHistoryForContext });
@@ -112,6 +113,7 @@ export default function StyleBotApp() {
         break;
       case 'escalate':
         addMessage('bot', "I'm transferring you to a human agent. Please wait a moment...");
+        // In a real app, this would trigger an actual escalation process.
         break;
     }
   };
