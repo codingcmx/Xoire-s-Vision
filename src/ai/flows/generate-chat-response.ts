@@ -61,18 +61,13 @@ You can help with:
 Current conversation:
 {{#if chatHistory}}
 {{#each chatHistory}}
+{{sender}}:
 {{#if text}}
-{{sender}}: {{{text}}}
+  {{{text}}}
+{{else if type}}
+  [Displayed a '{{type}}' card for the user]
 {{else}}
-{{! This handles messages that were cards/features and didn't have direct 'text' }}
-{{#if (eq type "product_recommendations")}}
-{{sender}}: [Displayed product recommendations card]
-{{else if (eq type "style_suggestions")}}
-{{sender}}: [Displayed style suggestions card]
-{{else}}
-{{! Fallback for other non-text types if necessary, though less common in history }}
-{{sender}}: [Displayed a feature card]
-{{/if}}
+  [Interacted with a feature]
 {{/if}}
 {{/each}}
 {{/if}}
@@ -154,7 +149,7 @@ const generateChatResponseFlow = ai.defineFlow(
     // Filter out messages that are purely system messages or have no usable text/type for context
     const filteredChatHistory = input.chatHistory?.filter(m => {
         if (m.text && m.text.trim() !== '') return true;
-        if (m.type && (m.type === 'product_recommendations' || m.type === 'style_suggestions')) return true; // Keep card indicators
+        if (m.type && (m.type === 'product_recommendations' || m.type === 'style_suggestions' || m.type === 'form_request')) return true; // Keep card indicators and form requests
         return false;
     });
 
