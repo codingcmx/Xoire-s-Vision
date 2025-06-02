@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react'; // Added useEffect
+import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SendHorizonal, ShoppingBag, Palette, HelpCircle, Headset, PhoneForwarded } from 'lucide-react';
@@ -15,10 +15,10 @@ interface ChatControlsProps {
 
 export function ChatControls({ onSendMessage, isSending, onTriggerFeature }: ChatControlsProps) {
   const [inputValue, setInputValue] = useState('');
-  const [isClient, setIsClient] = useState(false); // Added state for client-side rendering
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Set to true after component mounts on the client
+    setIsClient(true);
   }, []);
 
   const handleSend = () => {
@@ -46,42 +46,54 @@ export function ChatControls({ onSendMessage, isSending, onTriggerFeature }: Cha
   return (
     <TooltipProvider>
       <div className="bg-card border-t p-4 shadow- ऊपर">
-        {isClient && ( // Conditionally render the part with tooltips
-          <div className="flex items-center space-x-2 mb-3">
-            {actionButtons.map(({ feature, label, icon: Icon, hint }) => (
-              <Tooltip key={feature}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => onTriggerFeature(feature)}
-                    aria-label={label}
-                    className="text-muted-foreground hover:text-primary-foreground hover:bg-primary hover:border-primary"
-                  >
-                    <Icon className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top">
-                  <p>{hint}</p>
-                </TooltipContent>
-              </Tooltip>
-            ))}
+        {isClient ? (
+          <>
+            <div className="flex items-center space-x-2 mb-3">
+              {actionButtons.map(({ feature, label, icon: Icon, hint }) => (
+                <Tooltip key={feature}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => onTriggerFeature(feature)}
+                      aria-label={label}
+                      className="text-muted-foreground hover:text-primary-foreground hover:bg-primary hover:border-primary"
+                    >
+                      <Icon className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>{hint}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+            <div className="flex items-center space-x-2">
+              <Input
+                type="text"
+                placeholder="Type your message..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                disabled={isSending}
+                className="flex-grow text-sm"
+              />
+              <Button onClick={handleSend} disabled={isSending || !inputValue.trim()} aria-label="Send message">
+                <SendHorizonal className="h-5 w-5" />
+              </Button>
+            </div>
+          </>
+        ) : (
+          // Placeholder or skeleton for initial render if desired, or just nothing until client mounts
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2 h-[40px]">
+              {/* Placeholder for action buttons */}
+            </div>
+            <div className="flex items-center space-x-2 h-[40px]">
+              {/* Placeholder for input and send button */}
+            </div>
           </div>
         )}
-        <div className="flex items-center space-x-2">
-          <Input
-            type="text"
-            placeholder="Type your message..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-            disabled={isSending}
-            className="flex-grow text-sm"
-          />
-          <Button onClick={handleSend} disabled={isSending || !inputValue.trim()} aria-label="Send message">
-            <SendHorizonal className="h-5 w-5" />
-          </Button>
-        </div>
         <div className="text-center mt-2">
           <p className="text-xs text-muted-foreground/80">
             Powered by Xoire
