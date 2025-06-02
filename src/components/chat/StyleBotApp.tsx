@@ -24,7 +24,7 @@ export default function StyleBotApp() {
   const [showFaqList, setShowFaqList] = useState(false);
   const { toast } = useToast();
 
-  const addMessage = useCallback((sender: Message['sender'], text?: string, type: Message['type'] = 'text', data?: any, isLoadingFlag?: boolean) => {
+  const addMessage = useCallback((sender: Message['sender'], text?: string, type: Message['type'] = 'text', data?: any, isLoadingFlag?: boolean, originalInput?: GenerateProductRecommendationsInput | GenerateStyleSuggestionsInput) => {
     const newMessage: Message = {
       id: Date.now().toString() + Math.random().toString(), // Simple unique ID
       sender,
@@ -33,13 +33,14 @@ export default function StyleBotApp() {
       type,
       data,
       isLoading: isLoadingFlag,
+      originalInput,
     };
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     return newMessage.id;
   }, []);
-  
+
   const updateMessage = useCallback((messageId: string, updates: Partial<Message>) => {
-    setMessages(prevMessages => 
+    setMessages(prevMessages =>
       prevMessages.map(msg => msg.id === messageId ? { ...msg, ...updates, isLoading: false } : msg)
     );
   }, []);
@@ -59,6 +60,38 @@ export default function StyleBotApp() {
     return null;
   };
 
+  const fetchMoreProductRecommendations = async (userPreferences: string) => {
+    setIsLoading(true);
+    const inputForFlow: GenerateProductRecommendationsInput = { userPreferences };
+    // The AI's text response (e.g., "Okay, looking for more...") is already added by handleSendMessage.
+    // We now add the AI's loading card for the new recommendations.
+    const loadingMsgId = addMessage('ai', undefined, 'product_recommendations', undefined, true);
+
+    try {
+      const result = await getProductRecommendationsAction(inputForFlow);
+      if ((result as ActionError).error) {
+        const errorResult = result as ActionError;
+        console.error("Error getting more product recommendations:", errorResult.error.message);
+        updateMessage(loadingMsgId, { text: `Sorry, I couldn't get more product recommendations. ${errorResult.error.message}`, type: 'text' });
+        toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
+      } else {
+        updateMessage(loadingMsgId, {
+          data: result as GenerateProductRecommendationsOutput,
+          originalInput: inputForFlow // Store the input that generated *these* recommendations
+        });
+        // Optional: Add a follow-up bot message specifically for "more" results.
+        // setTimeout(() => addMessage('bot', "Here are some additional ideas! Let me know if anything catches your eye."), 600);
+      }
+    } catch (error: any) {
+      console.error("Client-side error calling getProductRecommendationsAction for more:", error);
+      const errorMessage = error.message || "An unexpected error occurred while fetching more recommendations.";
+      updateMessage(loadingMsgId, { text: `Sorry, an error occurred while getting more recommendations. ${errorMessage}`, type: 'text' });
+      toast({ title: "Error", description: errorMessage, variant: "destructive" });
+    }
+    setIsLoading(false);
+  };
+
+
   const handleSendMessage = async (text: string) => {
     addMessage('user', text);
     setIsLoading(true);
@@ -72,22 +105,28 @@ export default function StyleBotApp() {
       const loadingMsgId = addMessage('bot', undefined, 'text', undefined, true);
       try {
         const chatHistoryForContext = messages
-          .slice(-5) // Get last 5 messages for context
-          .map(m => ({ 
+          .slice(-6) // Get last 6 messages for context
+          .map(m => ({
             sender: m.sender as 'user' | 'bot' | 'ai',
-            text: m.text, // Pass text directly
-            type: m.type, // Pass message type
+            text: m.text,
+            type: m.type,
+            originalUserPreferences: m.type === 'product_recommendations' && m.originalInput && 'userPreferences' in m.originalInput ? (m.originalInput as GenerateProductRecommendationsInput).userPreferences : undefined,
           }));
-        
+
         const result = await getChatResponseAction({ userInput: text, chatHistory: chatHistoryForContext });
+
         if ((result as ActionError).error) {
           const errorResult = result as ActionError;
-          console.error(errorResult.error.message);
+          console.error("Error from getChatResponseAction:", errorResult.error.message);
           updateMessage(loadingMsgId, { text: `Sorry, I had a little trouble with that. ${errorResult.error.message}`, type: 'text' });
           toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
         } else {
           const chatResponse = result as GenerateChatResponseOutput;
           updateMessage(loadingMsgId, { text: chatResponse.aiResponse });
+
+          if (chatResponse.triggerAction === 'fetch_more_products' && chatResponse.actionInput) {
+            fetchMoreProductRecommendations(chatResponse.actionInput);
+          }
         }
       } catch (error: any) {
         console.error("Client-side error calling getChatResponseAction:", error);
@@ -120,7 +159,7 @@ export default function StyleBotApp() {
 
   const handleProductRecSubmit = async (data: GenerateProductRecommendationsInput) => {
     setShowAiForm(null);
-    addMessage('user', "Okay, here are my preferences for product recommendations."); 
+    addMessage('user', "Okay, here are my preferences for product recommendations.");
     const loadingMsgId = addMessage('ai', undefined, 'product_recommendations', undefined, true);
     setIsLoading(true);
     try {
@@ -131,13 +170,16 @@ export default function StyleBotApp() {
         updateMessage(loadingMsgId, { text: `Sorry, I couldn't get product recommendations. ${errorResult.error.message}`, type: 'text' });
         toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
       } else {
-        updateMessage(loadingMsgId, { data: result as GenerateProductRecommendationsOutput });
+        updateMessage(loadingMsgId, {
+            data: result as GenerateProductRecommendationsOutput,
+            originalInput: data // Store the input that generated these recommendations
+        });
         // Follow-up message from the bot
         setTimeout(() => {
             addMessage('bot', "Hope you like these product ideas! ✨ Would you also be interested in some personalized style and color advice to complement them? I can help with that too!");
         }, 600); // Small delay to ensure recommendation card renders first
       }
-    } catch (error: any) { 
+    } catch (error: any) {
       console.error("Client-side error calling getProductRecommendationsAction:", error);
       const errorMessage = error.message || "An unexpected error occurred while fetching recommendations.";
       updateMessage(loadingMsgId, { text: `Sorry, I couldn't get product recommendations right now. ${errorMessage}`, type: 'text' });
@@ -148,7 +190,7 @@ export default function StyleBotApp() {
 
   const handleStyleGuideSubmit = async (data: GenerateStyleSuggestionsInput) => {
     setShowAiForm(null);
-    addMessage('user', "Great, here's my info for style advice."); 
+    addMessage('user', "Great, here's my info for style advice.");
     const loadingMsgId = addMessage('ai', undefined, 'style_suggestions', undefined, true);
     setIsLoading(true);
     try {
@@ -159,9 +201,12 @@ export default function StyleBotApp() {
         updateMessage(loadingMsgId, { text: `Sorry, I couldn't get style suggestions. ${errorResult.error.message}`, type: 'text' });
         toast({ title: "Error", description: errorResult.error.message, variant: "destructive" });
       } else {
-        updateMessage(loadingMsgId, { data: result as GenerateStyleSuggestionsOutput });
+        updateMessage(loadingMsgId, {
+            data: result as GenerateStyleSuggestionsOutput,
+            originalInput: data // Store the input that generated these suggestions
+        });
       }
-    } catch (error: any) { 
+    } catch (error: any) {
       console.error("Client-side error calling getStyleSuggestionsAction:", error);
       const errorMessage = error.message || "An unexpected error occurred while fetching style suggestions.";
       updateMessage(loadingMsgId, { text: `Sorry, I couldn't get style suggestions right now. ${errorMessage}`, type: 'text' });
@@ -184,7 +229,7 @@ export default function StyleBotApp() {
               {showAiForm === 'product_recommendations' ? 'Product Recommendations' : 'Style & Color Guidance'}
             </DialogTitle>
             <DialogDescription>
-              {showAiForm === 'product_recommendations' 
+              {showAiForm === 'product_recommendations'
                 ? 'Tell us about your preferences so we can find products you might like.'
                 : 'Help us understand your style so we can offer personalized advice.'}
             </DialogDescription>

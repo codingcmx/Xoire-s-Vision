@@ -1,6 +1,6 @@
 
-import type { GenerateProductRecommendationsOutput } from '@/ai/flows/generate-product-recommendations';
-import type { GenerateStyleSuggestionsOutput } from '@/ai/flows/generate-style-suggestions';
+import type { GenerateProductRecommendationsInput, GenerateProductRecommendationsOutput } from '@/ai/flows/generate-product-recommendations';
+import type { GenerateStyleSuggestionsInput, GenerateStyleSuggestionsOutput } from '@/ai/flows/generate-style-suggestions';
 
 export type MessageSender = 'user' | 'bot' | 'ai';
 
@@ -11,6 +11,7 @@ export interface Message {
   timestamp: Date;
   type: 'text' | 'product_recommendations' | 'style_suggestions' | 'form_request';
   data?: any; // To store AI results or form schemas
+  originalInput?: GenerateProductRecommendationsInput | GenerateStyleSuggestionsInput; // To store the input that generated AI card results
   isLoading?: boolean;
 }
 
@@ -19,7 +20,7 @@ export interface ProductRecommendationData {
   products: Array<{
     name: string;
     rationale: string;
-    imageUrl?: string; 
+    imageUrl?: string;
   }>;
   overallReasoning: string;
 }
