@@ -21,10 +21,10 @@ export interface ProductRecommendationData {
     name: string;
     rationale: string;
     imageUrl?: string;
+    dataAiHint?: string; // Added dataAiHint
   }>;
   overallReasoning: string;
 }
 export interface StyleSuggestionData extends GenerateStyleSuggestionsOutput {}
 
 export type AiFeature = 'product_recommendations' | 'style_suggestions';
-

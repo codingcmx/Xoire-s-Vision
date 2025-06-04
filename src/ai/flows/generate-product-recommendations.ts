@@ -24,6 +24,7 @@ export type GenerateProductRecommendationsInput = z.infer<
   typeof GenerateProductRecommendationsInputSchema
 >;
 
+// This schema is for the data structure returned by the getProductCatalogTool
 const ProductSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -32,16 +33,19 @@ const ProductSchema = z.object({
   tags: z.array(z.string()),
   price: z.number(),
   imageUrl: z.string().url().optional(),
+  dataAiHint: z.string().optional(), // Added dataAiHint
 });
 
+// This schema is for the final output of the AI flow
 const GenerateProductRecommendationsOutputSchema = z.object({
   products: z
     .array(z.object({
         name: z.string().describe("Name of the recommended product."),
         rationale: z.string().describe("Brief rationale for why this specific product is recommended based on user input and catalog match."),
         imageUrl: z.string().url().optional().describe("URL of the product image, if available from the catalog tool. If not available, this field should be omitted entirely."),
+        dataAiHint: z.string().optional().describe("Keywords for image search, if available from the catalog tool and relevant."), // Added dataAiHint
     }))
-    .describe('An array of product objects that are recommended from the catalog. Each object includes the product name, rationale, and imageUrl if provided by the catalog tool.'),
+    .describe('An array of product objects that are recommended from the catalog. Each object includes the product name, rationale, imageUrl (if provided), and dataAiHint (if provided).'),
   overallReasoning: z
     .string()
     .describe(
@@ -56,11 +60,11 @@ export type GenerateProductRecommendationsOutput = z.infer<
 const getProductCatalogTool = ai.defineTool(
   {
     name: 'getProductCatalogTool',
-    description: 'Searches the product catalog based on a query. Use this tool to find products that match user preferences or descriptions before making recommendations. Include product image URLs in the results if available.',
+    description: 'Searches the product catalog based on a query. Use this tool to find products that match user preferences or descriptions before making recommendations. Include product image URLs and dataAiHint in the results if available.',
     inputSchema: z.object({
       searchQuery: z.string().describe('A search query describing the types of products to look for, based on user preferences (e.g., "black cotton t-shirt", "comfortable denim jeans", "summer accessories"). Be specific to get relevant results.'),
     }),
-    outputSchema: z.array(ProductSchema),
+    outputSchema: z.array(ProductSchema), // Uses the ProductSchema which includes dataAiHint
   },
   async (input) => {
     return fetchProductsFromCatalog(input.searchQuery);
@@ -87,14 +91,15 @@ User's Stated Preferences:
 Instructions:
 1.  Analyze the user's preferences to understand what they are looking for.
 2.  Formulate a search query based on this understanding.
-3.  Use the 'getProductCatalogTool' with your search query to fetch relevant products from our catalog. This tool will provide product details including name, description, and image URL if available.
+3.  Use the 'getProductCatalogTool' with your search query to fetch relevant products from our catalog. This tool will provide product details including name, description, image URL, and dataAiHint if available.
 4.  Review the products returned by the tool.
 5.  Select 5-6 products from the tool's results that are the best match for the user.
 6.  For each selected product, provide its name and a brief rationale.
 7.  If the 'getProductCatalogTool' provided a valid 'imageUrl' for a product, include it in your response.
 8.  **VERY IMPORTANT**: If the tool does NOT supply an 'imageUrl' for a product, or if the 'imageUrl' is not a valid URL, the 'imageUrl' field **MUST NOT BE INCLUDED** in the JSON object for that product. Do NOT set it to \`null\`, an empty string, or any placeholder. Only include the 'imageUrl' field if a valid URL string is available from the tool.
-9.  Provide an overall reasoning for your selections. If this reasoning involves multiple points or aspects, present it as a bulleted list (using '-' or '*') for clarity.
-10. Only recommend products that are returned by the 'getProductCatalogTool'. Do not invent products or recommend items not found in the catalog search results. If the tool returns no relevant products, state that you couldn't find suitable items in the catalog based on the current query.
+9.  If the 'getProductCatalogTool' provided a 'dataAiHint' for a product, include this 'dataAiHint' in your response for that product. If not available, omit the 'dataAiHint' field.
+10. Provide an overall reasoning for your selections. If this reasoning involves multiple points or aspects, present it as a bulleted list (using '-' or '*') for clarity.
+11. Only recommend products that are returned by the 'getProductCatalogTool'. Do not invent products or recommend items not found in the catalog search results. If the tool returns no relevant products, state that you couldn't find suitable items in the catalog based on the current query.
 
 Return the list of product recommendations and reasoning in the requested JSON format.
   `,
@@ -118,4 +123,3 @@ const generateProductRecommendationsFlow = ai.defineFlow(
     return output;
   }
 );
-

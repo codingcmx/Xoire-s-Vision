@@ -28,9 +28,10 @@ export function ProductRecommendationCard({ data }: ProductRecommendationCardPro
                     src={product.imageUrl}
                     alt={product.name}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Basic responsive sizes
+                    sizes="80px" // Simplified sizes prop
                     style={{ objectFit: 'cover' }}
                     className="rounded"
+                    data-ai-hint={product.dataAiHint} // Pass dataAiHint if available
                   />
                 </div>
               )}

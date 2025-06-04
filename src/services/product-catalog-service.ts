@@ -14,6 +14,7 @@ export interface Product {
   tags: string[];
   price: number;
   imageUrl?: string; // Optional image URL
+  dataAiHint?: string; // Optional hint for AI image search
 }
 
 // Sample product data - replace with your actual product data source
@@ -26,7 +27,7 @@ const sampleProducts: Product[] = [
     tags: ['t-shirt', 'cotton', 'basic', 'black', 'top'],
     price: 25.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "tee shirt"
+    dataAiHint: "tee shirt"
   },
   {
     id: 'prod_002',
@@ -36,7 +37,7 @@ const sampleProducts: Product[] = [
     tags: ['jeans', 'denim', 'slim fit', 'blue', 'pants'],
     price: 60.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "denim jeans"
+    dataAiHint: "denim jeans"
   },
   {
     id: 'prod_003',
@@ -46,7 +47,7 @@ const sampleProducts: Product[] = [
     tags: ['sneakers', 'leather', 'white', 'minimalist', 'shoes'],
     price: 90.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "white sneaker"
+    dataAiHint: "white sneaker"
   },
   {
     id: 'prod_004',
@@ -56,7 +57,7 @@ const sampleProducts: Product[] = [
     tags: ['shirt', 'linen', 'beige', 'summer', 'top'],
     price: 45.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "linen shirt"
+    dataAiHint: "linen shirt"
   },
   {
     id: 'prod_005',
@@ -66,7 +67,7 @@ const sampleProducts: Product[] = [
     tags: ['bag', 'tote', 'canvas', 'navy', 'accessory'],
     price: 30.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "canvas bag"
+    dataAiHint: "canvas bag"
   },
   {
     id: 'prod_006',
@@ -76,7 +77,7 @@ const sampleProducts: Product[] = [
     tags: ['hat', 'beanie', 'wool', 'charcoal', 'winter'],
     price: 20.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "wool beanie"
+    dataAiHint: "wool beanie"
   },
   {
     id: 'prod_007',
@@ -86,7 +87,7 @@ const sampleProducts: Product[] = [
     tags: ['jacket', 'denim', 'outerwear', 'vintage'],
     price: 75.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "denim jacket"
+    dataAiHint: "denim jacket"
   },
   {
     id: 'prod_008',
@@ -96,7 +97,7 @@ const sampleProducts: Product[] = [
     tags: ['scarf', 'silk', 'floral', 'accessory'],
     price: 35.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "silk scarf"
+    dataAiHint: "silk scarf"
   },
   {
     id: 'prod_009',
@@ -106,7 +107,7 @@ const sampleProducts: Product[] = [
     tags: ['joggers', 'sweatpants', 'casual', 'loungewear'],
     price: 50.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "grey joggers"
+    dataAiHint: "grey joggers"
   },
   {
     id: 'prod_010',
@@ -116,7 +117,7 @@ const sampleProducts: Product[] = [
     tags: ['belt', 'leather', 'brown', 'accessory'],
     price: 40.00,
     imageUrl: `https://placehold.co/300x300.png`,
-    "data-ai-hint": "leather belt"
+    dataAiHint: "leather belt"
   },
   // Baggy Clothes Start
   {
@@ -127,7 +128,7 @@ const sampleProducts: Product[] = [
     tags: ['hoodie', 'oversized', 'baggy', 'streetwear', 'graphic', 'black', 'top'],
     price: 65.00,
     imageUrl: `https://placehold.co/400x400.png`,
-    "data-ai-hint": "graphic hoodie"
+    dataAiHint: "graphic hoodie"
   },
   {
     id: 'prod_012',
@@ -137,7 +138,7 @@ const sampleProducts: Product[] = [
     tags: ['jeans', 'denim', 'baggy', 'oversized', 'light wash', 'pants', 'streetwear'],
     price: 70.00,
     imageUrl: `https://placehold.co/400x400.png`,
-    "data-ai-hint": "baggy jeans"
+    dataAiHint: "baggy jeans"
   },
   {
     id: 'prod_013',
@@ -147,7 +148,7 @@ const sampleProducts: Product[] = [
     tags: ['cargo pants', 'loose fit', 'baggy', 'utilitarian', 'olive', 'pants'],
     price: 55.00,
     imageUrl: `https://placehold.co/400x400.png`,
-    "data-ai-hint": "cargo pants"
+    dataAiHint: "cargo pants"
   },
   {
     id: 'prod_014',
@@ -157,7 +158,7 @@ const sampleProducts: Product[] = [
     tags: ['t-shirt', 'baggy', 'oversized', 'skater', 'white', 'top', 'streetwear'],
     price: 30.00,
     imageUrl: `https://placehold.co/400x400.png`,
-    "data-ai-hint": "skater shirt"
+    dataAiHint: "skater shirt"
   },
   {
     id: 'prod_015',
@@ -167,7 +168,7 @@ const sampleProducts: Product[] = [
     tags: ['trousers', 'corduroy', 'relaxed fit', 'baggy', 'brown', 'pants'],
     price: 60.00,
     imageUrl: `https://placehold.co/400x400.png`,
-    "data-ai-hint": "corduroy trousers"
+    dataAiHint: "corduroy trousers"
   },
   {
     id: 'prod_016',
@@ -177,7 +178,7 @@ const sampleProducts: Product[] = [
     tags: ['sweater', 'knitwear', 'oversized', 'baggy', 'cream', 'top', 'cozy'],
     price: 75.00,
     imageUrl: `https://placehold.co/400x400.png`,
-    "data-ai-hint": "knit sweater"
+    dataAiHint: "knit sweater"
   },
   {
     id: 'prod_017',
@@ -187,7 +188,7 @@ const sampleProducts: Product[] = [
     tags: ['track pants', 'sweatpants', 'baggy', 'oversized', 'grey', 'sporty', 'streetwear'],
     price: 48.00,
     imageUrl: `https://placehold.co/400x400.png`,
-    "data-ai-hint": "track pants"
+    dataAiHint: "track pants"
   }
   // Baggy Clothes End
 ];
