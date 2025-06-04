@@ -15,13 +15,11 @@ export interface Message {
   isLoading?: boolean;
 }
 
-// Updated to reflect the new structure from generate-product-recommendations.ts
 export interface ProductRecommendationData {
   products: Array<{
     name: string;
     rationale: string;
-    imageUrl?: string;
-    dataAiHint?: string; // Added dataAiHint
+    productUrl?: string; // Changed from imageUrl to productUrl
   }>;
   overallReasoning: string;
 }

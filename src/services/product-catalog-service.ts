@@ -13,8 +13,7 @@ export interface Product {
   category: string;
   tags: string[];
   price: number;
-  imageUrl?: string; // Optional image URL
-  dataAiHint?: string; // Optional hint for AI image search
+  productUrl?: string; // Optional URL to the product page
 }
 
 // Sample product data - replace with your actual product data source
@@ -26,8 +25,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['t-shirt', 'cotton', 'basic', 'black', 'top'],
     price: 25.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "tee shirt"
+    productUrl: 'https://example.com/products/classic-cotton-tee-black',
   },
   {
     id: 'prod_002',
@@ -36,8 +34,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['jeans', 'denim', 'slim fit', 'blue', 'pants'],
     price: 60.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "denim jeans"
+    productUrl: 'https://example.com/products/slim-fit-denim-jeans-blue',
   },
   {
     id: 'prod_003',
@@ -46,8 +43,7 @@ const sampleProducts: Product[] = [
     category: 'Footwear',
     tags: ['sneakers', 'leather', 'white', 'minimalist', 'shoes'],
     price: 90.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "white sneaker"
+    productUrl: 'https://example.com/products/minimalist-leather-sneakers-white',
   },
   {
     id: 'prod_004',
@@ -56,8 +52,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['shirt', 'linen', 'beige', 'summer', 'top'],
     price: 45.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "linen shirt"
+    productUrl: 'https://example.com/products/lightweight-linen-shirt-beige',
   },
   {
     id: 'prod_005',
@@ -66,8 +61,7 @@ const sampleProducts: Product[] = [
     category: 'Accessories',
     tags: ['bag', 'tote', 'canvas', 'navy', 'accessory'],
     price: 30.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "canvas bag"
+    productUrl: 'https://example.com/products/canvas-tote-bag-navy',
   },
   {
     id: 'prod_006',
@@ -76,8 +70,7 @@ const sampleProducts: Product[] = [
     category: 'Accessories',
     tags: ['hat', 'beanie', 'wool', 'charcoal', 'winter'],
     price: 20.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "wool beanie"
+    productUrl: 'https://example.com/products/wool-beanie-charcoal',
   },
   {
     id: 'prod_007',
@@ -86,8 +79,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['jacket', 'denim', 'outerwear', 'vintage'],
     price: 75.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "denim jacket"
+    productUrl: 'https://example.com/products/vintage-wash-denim-jacket',
   },
   {
     id: 'prod_008',
@@ -96,8 +88,7 @@ const sampleProducts: Product[] = [
     category: 'Accessories',
     tags: ['scarf', 'silk', 'floral', 'accessory'],
     price: 35.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "silk scarf"
+    productUrl: 'https://example.com/products/silk-scarf-floral-print',
   },
   {
     id: 'prod_009',
@@ -106,8 +97,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['joggers', 'sweatpants', 'casual', 'loungewear'],
     price: 50.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "grey joggers"
+    productUrl: 'https://example.com/products/comfortable-joggers-grey-marl',
   },
   {
     id: 'prod_010',
@@ -116,8 +106,7 @@ const sampleProducts: Product[] = [
     category: 'Accessories',
     tags: ['belt', 'leather', 'brown', 'accessory'],
     price: 40.00,
-    imageUrl: `https://placehold.co/300x300.png`,
-    dataAiHint: "leather belt"
+    productUrl: 'https://example.com/products/leather-belt-brown',
   },
   // Baggy Clothes Start
   {
@@ -127,8 +116,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['hoodie', 'oversized', 'baggy', 'streetwear', 'graphic', 'black', 'top'],
     price: 65.00,
-    imageUrl: `https://placehold.co/400x400.png`,
-    dataAiHint: "graphic hoodie"
+    productUrl: 'https://example.com/products/oversized-graphic-hoodie-black',
   },
   {
     id: 'prod_012',
@@ -137,8 +125,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['jeans', 'denim', 'baggy', 'oversized', 'light wash', 'pants', 'streetwear'],
     price: 70.00,
-    imageUrl: `https://placehold.co/400x400.png`,
-    dataAiHint: "baggy jeans"
+    productUrl: 'https://example.com/products/baggy-denim-jeans-light-wash',
   },
   {
     id: 'prod_013',
@@ -147,8 +134,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['cargo pants', 'loose fit', 'baggy', 'utilitarian', 'olive', 'pants'],
     price: 55.00,
-    imageUrl: `https://placehold.co/400x400.png`,
-    dataAiHint: "cargo pants"
+    productUrl: 'https://example.com/products/loose-fit-cargo-pants-olive-green',
   },
   {
     id: 'prod_014',
@@ -157,8 +143,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['t-shirt', 'baggy', 'oversized', 'skater', 'white', 'top', 'streetwear'],
     price: 30.00,
-    imageUrl: `https://placehold.co/400x400.png`,
-    dataAiHint: "skater shirt"
+    productUrl: 'https://example.com/products/baggy-skater-t-shirt-white',
   },
   {
     id: 'prod_015',
@@ -167,8 +152,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['trousers', 'corduroy', 'relaxed fit', 'baggy', 'brown', 'pants'],
     price: 60.00,
-    imageUrl: `https://placehold.co/400x400.png`,
-    dataAiHint: "corduroy trousers"
+    productUrl: 'https://example.com/products/relaxed-fit-corduroy-trousers-brown',
   },
   {
     id: 'prod_016',
@@ -177,8 +161,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['sweater', 'knitwear', 'oversized', 'baggy', 'cream', 'top', 'cozy'],
     price: 75.00,
-    imageUrl: `https://placehold.co/400x400.png`,
-    dataAiHint: "knit sweater"
+    productUrl: 'https://example.com/products/oversized-knit-sweater-cream',
   },
   {
     id: 'prod_017',
@@ -187,8 +170,7 @@ const sampleProducts: Product[] = [
     category: 'Apparel',
     tags: ['track pants', 'sweatpants', 'baggy', 'oversized', 'grey', 'sporty', 'streetwear'],
     price: 48.00,
-    imageUrl: `https://placehold.co/400x400.png`,
-    dataAiHint: "track pants"
+    productUrl: 'https://example.com/products/baggy-track-pants-grey',
   }
   // Baggy Clothes End
 ];

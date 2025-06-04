@@ -1,8 +1,7 @@
 
 import type { ProductRecommendationData } from '@/types/chat';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingBag } from 'lucide-react';
-import Image from 'next/image';
+import { ShoppingBag, ExternalLink } from 'lucide-react'; // Added ExternalLink for product URL
 
 interface ProductRecommendationCardProps {
   data: ProductRecommendationData;
@@ -21,22 +20,21 @@ export function ProductRecommendationCard({ data }: ProductRecommendationCardPro
       <CardContent className="p-4 space-y-4">
         {data.products && data.products.length > 0 ? (
           data.products.map((product, index) => (
-            <div key={index} className="p-3 border rounded-md bg-secondary/30 shadow-sm flex items-start space-x-3">
-              {product.imageUrl && (
-                <div className="w-20 h-20 relative flex-shrink-0">
-                  <Image
-                    src={product.imageUrl}
-                    alt={product.name}
-                    fill
-                    sizes="80px" // Simplified sizes prop
-                    style={{ objectFit: 'cover' }}
-                    className="rounded"
-                    data-ai-hint={product.dataAiHint} // Pass dataAiHint if available
-                  />
-                </div>
-              )}
+            <div key={index} className="p-3 border rounded-md bg-secondary/30 shadow-sm">
               <div className="flex-1">
-                <h4 className="font-semibold text-card-foreground">{product.name}</h4>
+                {product.productUrl ? (
+                  <a
+                    href={product.productUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-card-foreground hover:text-primary hover:underline inline-flex items-center group"
+                  >
+                    {product.name}
+                    <ExternalLink className="h-4 w-4 ml-1.5 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                ) : (
+                  <h4 className="font-semibold text-card-foreground">{product.name}</h4>
+                )}
                 {product.rationale && <p className="text-xs text-muted-foreground italic mt-1">{product.rationale}</p>}
               </div>
             </div>
